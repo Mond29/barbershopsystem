@@ -4,7 +4,8 @@ import '../data/sample_data.dart';
 import '../data/products_data.dart';
 
 class ServicesScreen extends StatefulWidget {
-  final void Function(int index, {BarberService? preselectedService}) onBookService;
+  final void Function(int index, {BarberService? preselectedService})
+  onBookService;
   final VoidCallback onOpenHairstyle;
 
   const ServicesScreen({
@@ -33,12 +34,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
       list = list.where((s) {
-        bool match = s.name.toLowerCase().contains(q) ||
+        bool match =
+            s.name.toLowerCase().contains(q) ||
             s.description.toLowerCase().contains(q) ||
             s.category.toLowerCase().contains(q);
         if (!match && s.subServices != null) {
-          match = s.subServices!
-              .any((sub) => sub.name.toLowerCase().contains(q));
+          match = s.subServices!.any(
+            (sub) => sub.name.toLowerCase().contains(q),
+          );
         }
         return match;
       }).toList();
@@ -61,10 +64,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           children: [
             _buildHeader(),
             _buildTabSwitcher(),
-            if (_viewTab == 0) ...[
-              _buildSearchBar(),
-              _buildCategoryChips(),
-            ],
+            if (_viewTab == 0) ...[_buildSearchBar(), _buildCategoryChips()],
             const SizedBox(height: 8),
             Expanded(
               child: _viewTab == 0
@@ -94,10 +94,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           SizedBox(height: 6),
           Text(
             "Crafted for confidence. Your style. Our craft.",
-            style: TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
           ),
         ],
       ),
@@ -191,23 +188,30 @@ class _ServicesScreenState extends State<ServicesScreen> {
           style: const TextStyle(color: Colors.white, fontSize: 15),
           decoration: InputDecoration(
             hintText: "Search services, cuts, treatments...",
-            hintStyle:
-                const TextStyle(color: Color(0xFF666666), fontSize: 15),
-            prefixIcon: const Icon(Icons.search,
-                color: Color(0xFFD4A853), size: 22),
+            hintStyle: const TextStyle(color: Color(0xFF666666), fontSize: 15),
+            prefixIcon: const Icon(
+              Icons.search,
+              color: Color(0xFFD4A853),
+              size: 22,
+            ),
             suffixIcon: _searchQuery.isNotEmpty
                 ? IconButton(
                     onPressed: () {
                       _searchController.clear();
                       setState(() => _searchQuery = '');
                     },
-                    icon: const Icon(Icons.clear,
-                        color: Color(0xFF666666), size: 20),
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Color(0xFF666666),
+                      size: 20,
+                    ),
                   )
                 : null,
             border: InputBorder.none,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
           ),
         ),
       ),
@@ -218,16 +222,17 @@ class _ServicesScreenState extends State<ServicesScreen> {
     return SizedBox(
       height: 56,
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 4),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final cat = _categories[index];
-          final isSelected =
-              (_selectedCategory ?? 'All') == cat;
+          final isSelected = (_selectedCategory ?? 'All') == cat;
           return ChoiceChip(
             label: Text(cat),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+            visualDensity: VisualDensity.compact,
             selected: isSelected,
             onSelected: (_) {
               setState(() {
@@ -238,10 +243,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
             selectedColor: const Color(0xFFD4A853),
             labelStyle: TextStyle(
               color: isSelected ? const Color(0xFF0F0F0F) : Colors.white,
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(
@@ -274,20 +279,25 @@ class _ServicesScreenState extends State<ServicesScreen> {
               color: const Color(0xFF1A1408),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                  color: const Color(0xFFD4A853).withValues(alpha: 0.4)),
+                color: const Color(0xFFD4A853).withValues(alpha: 0.4),
+              ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline,
-                    color: Color(0xFFD4A853), size: 20),
+                const Icon(
+                  Icons.info_outline,
+                  color: Color(0xFFD4A853),
+                  size: 20,
+                ),
                 const SizedBox(width: 10),
                 const Expanded(
                   child: Text(
                     "Tap 'Full Guide' below for the full Hairstyle Guide with product recommendations and booking.",
                     style: TextStyle(
-                        color: Color(0xFFDDDDDD),
-                        fontSize: 13,
-                        height: 1.4),
+                      color: Color(0xFFDDDDDD),
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
                   ),
                 ),
                 TextButton(
@@ -295,9 +305,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: const Text(
                     "Full Guide",
                     style: TextStyle(
-                        color: Color(0xFFD4A853),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12),
+                      color: Color(0xFFD4A853),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],
@@ -335,17 +346,19 @@ class _ServicesScreenState extends State<ServicesScreen> {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.22),
-                                borderRadius: BorderRadius.circular(10)),
+                              color: Colors.white.withValues(alpha: 0.22),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: Icon(s.icon, color: Colors.white),
                           ),
                           const Spacer(),
                           Text(
                             "#${i + 1}",
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700),
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
@@ -381,8 +394,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   Widget _buildServicesList() {
     if (_filteredServices.isEmpty) return _buildEmptyState();
+    final compact = MediaQuery.sizeOf(context).width < 390;
     return ListView.builder(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+      padding: EdgeInsets.fromLTRB(compact ? 16 : 24, 8, compact ? 16 : 24, 24),
       itemCount: _filteredServices.length,
       itemBuilder: (context, index) {
         return Padding(
@@ -425,10 +439,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             const SizedBox(height: 8),
             const Text(
               "Try a different search or category.",
-              style: TextStyle(
-                color: Color(0xFF999999),
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Color(0xFF999999), fontSize: 14),
             ),
           ],
         ),
@@ -437,13 +448,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
   }
 
   Widget _buildServiceTile(BarberService service) {
-    final hasSubs = service.subServices != null && service.subServices!.isNotEmpty;
-    final hasTiers = service.priceTiers != null && service.priceTiers!.isNotEmpty;
+    final compact = MediaQuery.sizeOf(context).width < 390;
+    final hasSubs =
+        service.subServices != null && service.subServices!.isNotEmpty;
+    final hasTiers =
+        service.priceTiers != null && service.priceTiers!.isNotEmpty;
     final subsLine = hasSubs
         ? "${service.subServices!.length} variants"
         : hasTiers
-            ? "${service.priceTiers!.length} tiers"
-            : null;
+        ? "${service.priceTiers!.length} tiers"
+        : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -457,13 +471,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
           borderRadius: BorderRadius.circular(16),
           onTap: () => _showServiceDetail(service),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(compact ? 12 : 16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: compact ? 52 : 60,
+                  height: compact ? 52 : 60,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [Color(0xFFD4A853), Color(0xFFB8892E)],
@@ -473,38 +487,47 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: Icon(
                     service.icon,
                     color: const Color(0xFF0F0F0F),
-                    size: 28,
+                    size: compact ? 24 : 28,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: compact ? 12 : 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD4A853)
-                                  .withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              service.category,
-                              style: const TextStyle(
-                                color: Color(0xFFD4A853),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.5,
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFD4A853,
+                                ).withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                service.category,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Color(0xFFD4A853),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xFF2A2A2A),
                               borderRadius: BorderRadius.circular(6),
@@ -563,41 +586,52 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "from ₱${service.price.toInt()}",
-                                style: const TextStyle(
-                                  color: Color(0xFFD4A853),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              if (hasSubs || hasTiers)
-                                const Text(
-                                  "Tap for all options",
-                                  style: TextStyle(
-                                    color: Color(0xFF777777),
-                                    fontSize: 10,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "from ₱${service.price.toInt()}",
+                                    maxLines: 1,
+                                    style: const TextStyle(
+                                      color: Color(0xFFD4A853),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                            ],
+                                if (hasSubs || hasTiers)
+                                  const Text(
+                                    "Tap for options",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Color(0xFF777777),
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
-                          const Spacer(),
+                          const SizedBox(width: 8),
                           SizedBox(
+                            width: compact ? 66 : 74,
                             height: 38,
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).maybePop();
-                                widget.onBookService(2,
-                                    preselectedService: service);
+                                widget.onBookService(
+                                  2,
+                                  preselectedService: service,
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFD4A853),
                                 foregroundColor: const Color(0xFF0F0F0F),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 18),
+                                padding: EdgeInsets.zero,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -679,10 +713,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     Center(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFD4A853)
-                              .withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFFD4A853,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -777,7 +814,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     _buildBulletPoint("Professional consultation"),
                     _buildBulletPoint("Premium shampoo & conditioner"),
                     _buildBulletPoint("Service by licensed barber"),
-                    _buildBulletPoint("Hot towel treatment (on applicable services)"),
+                    _buildBulletPoint(
+                      "Hot towel treatment (on applicable services)",
+                    ),
                     _buildBulletPoint("Final styling & product recommendation"),
                     const SizedBox(height: 28),
                     const Text(
@@ -960,8 +999,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         children: [
           const Padding(
             padding: EdgeInsets.only(top: 6),
-            child:
-                Icon(Icons.check_circle, color: Color(0xFFD4A853), size: 14),
+            child: Icon(Icons.check_circle, color: Color(0xFFD4A853), size: 14),
           ),
           const SizedBox(width: 10),
           Expanded(

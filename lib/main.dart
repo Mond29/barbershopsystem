@@ -139,6 +139,13 @@ class _MainScreenState extends State<MainScreen> {
     setState(() => _currentIndex = 2);
   }
 
+  void _onBookingSubmitted() {
+    _pendingService = null;
+    _pendingBranch = null;
+    _navKeys[2].currentState?.popUntil((route) => route.isFirst);
+    setState(() => _currentIndex = 0);
+  }
+
   void _openProductsFromDashboard() {
     _pushScreen(0, const ProductsScreen());
   }
@@ -187,6 +194,7 @@ class _MainScreenState extends State<MainScreen> {
               key: bookingKey,
               preselectedService: _pendingService,
               preselectedBranch: _pendingBranch,
+              onBookingSubmitted: _onBookingSubmitted,
             ),
           ),
           _buildOffstageNavigator(

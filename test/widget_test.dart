@@ -43,6 +43,23 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('services and category chips fit a 320px-wide screen', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const BarbershopApp());
+    await tester.tap(find.text('Services').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Our Services'), findsOneWidget);
+    expect(find.text('Haircut'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('booking fits a narrow phone and locks the MOA location', (
     WidgetTester tester,
   ) async {

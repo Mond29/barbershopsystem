@@ -6,11 +6,13 @@ import '../data/sample_data.dart';
 class BookingScreen extends StatefulWidget {
   final BarberService? preselectedService;
   final Branch? preselectedBranch;
+  final VoidCallback? onBookingSubmitted;
 
   const BookingScreen({
     super.key,
     this.preselectedService,
     this.preselectedBranch,
+    this.onBookingSubmitted,
   });
 
   @override
@@ -1530,6 +1532,7 @@ class BookingScreenState extends State<BookingScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       _resetForm();
+                      widget.onBookingSubmitted?.call();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFD4A853),
