@@ -640,7 +640,9 @@ class BookingScreenState extends State<BookingScreen> {
                   surface: Color(0xFF1A1A1A),
                   onSurface: Colors.white,
                 ),
-                dialogBackgroundColor: const Color(0xFF1A1A1A),
+                dialogTheme: const DialogThemeData(
+                  backgroundColor: Color(0xFF1A1A1A),
+                ),
               ),
               child: child!,
             );

@@ -22,7 +22,10 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final featuredProducts = ProductsData.all.take(5).toList();
     final featuredStyles = HairstylesData.all.take(3).toList();
-    final branches = SampleData.branches.where((b) => b.region == 'Metro Manila').take(3).toList();
+    final branches = SampleData.branches
+        .where((b) => b.region == 'Metro Manila')
+        .take(3)
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F0F),
@@ -175,10 +178,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     "Book Now",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -188,7 +188,10 @@ class DashboardScreen extends StatelessWidget {
                   onPressed: () => onNavigate(1),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    side: const BorderSide(color: Color(0xFFD4A853), width: 1.5),
+                    side: const BorderSide(
+                      color: Color(0xFFD4A853),
+                      width: 1.5,
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -196,10 +199,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     "Our Services",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -317,11 +317,7 @@ class DashboardScreen extends StatelessWidget {
                     : const Color(0xFFD4A853).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(9),
               ),
-              child: Icon(
-                icon,
-                color: const Color(0xFFD4A853),
-                size: 18,
-              ),
+              child: Icon(icon, color: const Color(0xFFD4A853), size: 18),
             ),
             const SizedBox(height: 7),
             Flexible(
@@ -387,14 +383,11 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           const Text(
             "Upgrade your style.",
-            style: TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 230,
+            height: 270,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: services.length,
@@ -410,8 +403,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildServiceCard(BarberService service) {
-    final hasSubs = service.subServices != null && service.subServices!.isNotEmpty;
-    final hasTiers = service.priceTiers != null && service.priceTiers!.isNotEmpty;
+    final hasSubs =
+        service.subServices != null && service.subServices!.isNotEmpty;
+    final hasTiers =
+        service.priceTiers != null && service.priceTiers!.isNotEmpty;
 
     return InkWell(
       onTap: () => onNavigate(1),
@@ -476,37 +471,43 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "₱${service.price.toInt()}",
-                      style: const TextStyle(
-                        color: Color(0xFFD4A853),
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (hasSubs)
-                      const Text(
-                        "+ more options",
-                        style: TextStyle(
-                          color: Color(0xFF666666),
-                          fontSize: 10,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "₱${service.price.toInt()}",
+                        style: const TextStyle(
+                          color: Color(0xFFD4A853),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    if (hasTiers)
-                      const Text(
-                        "by length tiers",
-                        style: TextStyle(
-                          color: Color(0xFF666666),
-                          fontSize: 10,
+                      if (hasSubs)
+                        const Text(
+                          "+ more options",
+                          style: TextStyle(
+                            color: Color(0xFF666666),
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                  ],
+                      if (hasTiers)
+                        const Text(
+                          "by length tiers",
+                          style: TextStyle(
+                            color: Color(0xFF666666),
+                            fontSize: 10,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
+                const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF2A2A2A),
                     borderRadius: BorderRadius.circular(6),
@@ -561,10 +562,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           const Text(
             "Gentleman in your hands.",
-            style: TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -610,9 +608,7 @@ class DashboardScreen extends StatelessWidget {
                 gradient: LinearGradient(colors: g),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Center(
-                child: Icon(p.icon, color: Colors.white, size: 32),
-              ),
+              child: Center(child: Icon(p.icon, color: Colors.white, size: 32)),
             ),
             const SizedBox(height: 10),
             Text(
@@ -628,10 +624,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               p.category,
-              style: const TextStyle(
-                color: Color(0xFF777777),
-                fontSize: 10,
-              ),
+              style: const TextStyle(color: Color(0xFF777777), fontSize: 10),
             ),
             const Spacer(),
             Text(
@@ -686,10 +679,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 4),
           const Text(
             "Find your signature look.",
-            style: TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
           ),
           const SizedBox(height: 18),
           GridView.builder(
@@ -777,7 +767,10 @@ class DashboardScreen extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFD4A853).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
@@ -793,12 +786,16 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0F0F0F),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: const Color(0xFFD4A853).withValues(alpha: 0.35)),
+                        color: const Color(0xFFD4A853).withValues(alpha: 0.35),
+                      ),
                     ),
                     child: const Text(
                       "Since 1988",
@@ -843,8 +840,10 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 11,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFD4A853).withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(10),
@@ -891,10 +890,7 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(
-            color: Color(0xFF999999),
-            fontSize: 11,
-          ),
+          style: const TextStyle(color: Color(0xFF999999), fontSize: 11),
         ),
       ],
     );
@@ -984,7 +980,9 @@ class DashboardScreen extends StatelessWidget {
                     onPressed: () => onNavigate(2),
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 8),
+                        horizontal: 14,
+                        vertical: 8,
+                      ),
                       backgroundColor: const Color(0xFFD4A853),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -1023,7 +1021,8 @@ class DashboardScreen extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-                color: const Color(0xFFD4A853).withValues(alpha: 0.4)),
+              color: const Color(0xFFD4A853).withValues(alpha: 0.4),
+            ),
           ),
           child: Row(
             children: [
@@ -1036,8 +1035,10 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child:
-                    const Icon(Icons.card_giftcard, color: Color(0xFF0F0F0F)),
+                child: const Icon(
+                  Icons.card_giftcard,
+                  color: Color(0xFF0F0F0F),
+                ),
               ),
               const SizedBox(width: 16),
               const Expanded(
@@ -1064,8 +1065,11 @@ class DashboardScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.arrow_forward_ios,
-                  color: Color(0xFFD4A853), size: 14),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Color(0xFFD4A853),
+                size: 14,
+              ),
             ],
           ),
         ),
@@ -1112,11 +1116,12 @@ class DashboardScreen extends StatelessWidget {
             Builder(
               builder: (ctx) => InkWell(
                 onTap: () async {
-                  final telUri =
-                      Uri(scheme: 'tel', path: '+63289278667');
+                  final telUri = Uri(scheme: 'tel', path: '+63289278667');
                   try {
-                    await launchUrl(telUri,
-                        mode: LaunchMode.externalApplication);
+                    await launchUrl(
+                      telUri,
+                      mode: LaunchMode.externalApplication,
+                    );
                   } catch (e) {
                     ScaffoldMessenger.of(ctx).showSnackBar(
                       SnackBar(
@@ -1137,11 +1142,7 @@ class DashboardScreen extends StatelessWidget {
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.phone,
-                        color: Color(0xFFD4A853),
-                        size: 20,
-                      ),
+                      Icon(Icons.phone, color: Color(0xFFD4A853), size: 20),
                       SizedBox(width: 10),
                       Text(
                         "(02) 89-GENTLE",
