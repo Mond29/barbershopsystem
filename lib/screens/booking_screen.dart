@@ -1283,14 +1283,19 @@ class BookingScreenState extends State<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Total Amount (pay in-store)",
-                style: TextStyle(
-                  color: Color(0xFF999999),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+              const Expanded(
+                child: Text(
+                  "Total (pay in-store)",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Color(0xFF999999),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
+              const SizedBox(width: 12),
               Text(
                 "₱${_totalPrice.toInt()}",
                 style: const TextStyle(
