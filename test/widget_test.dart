@@ -58,6 +58,12 @@ void main() {
     expect(find.text('Our Services'), findsOneWidget);
     expect(find.text('Haircut'), findsWidgets);
     expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('Hairstyle Guide').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Modern Mullet'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('booking fits a narrow phone and locks the MOA location', (

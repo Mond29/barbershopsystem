@@ -322,7 +322,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 14,
               mainAxisSpacing: 14,
-              childAspectRatio: 0.92,
+              mainAxisExtent: 224,
             ),
             itemCount: styles.length,
             itemBuilder: (ctx, i) {
@@ -365,10 +365,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       const Spacer(),
                       Text(
                         s.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
+                          height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 4),
