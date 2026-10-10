@@ -484,67 +484,89 @@ class BookingScreenState extends State<BookingScreen> {
 
   Widget _buildSubServiceSelector() {
     final subs = _selectedService!.subServices ?? [];
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final contentWidth = screenWidth - (screenWidth < 390 ? 32 : 48);
+    final cardWidth = screenWidth < 332
+        ? contentWidth
+        : (contentWidth - 12) / 2;
     return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: List.generate(subs.length, (i) {
-        final s = subs[i];
-        final isSel = _selectedSubService?.id == s.id;
-        return InkWell(
-          onTap: () => setState(() {
-            _selectedSubService = isSel ? null : s;
-          }),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.43,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isSel ? const Color(0xFFD4A853) : const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSel
+      spacing: 12,
+      runSpacing: 12,
+      children: List.generate(subs.length, (index) {
+        final subService = subs[index];
+        final isSelected = _selectedSubService?.id == subService.id;
+        final foreground = isSelected ? const Color(0xFF0F0F0F) : Colors.white;
+
+        return SizedBox(
+          width: cardWidth,
+          height: 124,
+          child: InkWell(
+            onTap: () => setState(() {
+              _selectedSubService = isSelected ? null : subService;
+            }),
+            borderRadius: BorderRadius.circular(16),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isSelected
                     ? const Color(0xFFD4A853)
-                    : const Color(0xFF2A2A2A),
+                    : const Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: isSelected
+                      ? const Color(0xFFD4A853)
+                      : const Color(0xFF2A2A2A),
+                  width: isSelected ? 1.5 : 1,
+                ),
               ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  s.name,
-                  style: TextStyle(
-                    color: isSel ? const Color(0xFF0F0F0F) : Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      subService.name,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: foreground,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        height: 1.25,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Text(
-                      "₱${s.price.toInt()}",
-                      style: TextStyle(
-                        color: isSel
-                            ? const Color(0xFF0F0F0F)
-                            : const Color(0xFFD4A853),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "₱${subService.price.toInt()}",
+                          style: TextStyle(
+                            color: isSelected
+                                ? foreground
+                                : const Color(0xFFD4A853),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      "${s.durationMinutes}m",
-                      style: TextStyle(
-                        color: isSel
-                            ? const Color(0xFF0F0F0F).withValues(alpha: 0.7)
-                            : const Color(0xFF888888),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                      Text(
+                        "${subService.durationMinutes}m",
+                        style: TextStyle(
+                          color: isSelected
+                              ? foreground.withValues(alpha: 0.65)
+                              : const Color(0xFF888888),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
