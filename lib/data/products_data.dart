@@ -215,7 +215,7 @@ class HairstylesData {
       name: 'Pompadour',
       tagline: 'Bold and neat. Built for presence.',
       description:
-          'Volume on top, volume everywhere that matters. A signature Bruno\'s cut — sculpted for height, texture, and a clean shape that turns heads from the boardroom to the bar.',
+          'Volume on top, volume everywhere that matters. A signature Gentleman cut — sculpted for height, texture, and a clean shape that turns heads from the boardroom to the bar.',
       icon: Icons.local_fire_department,
       recommendedProductIds: ['p1', 'p5', 'p6'],
     ),

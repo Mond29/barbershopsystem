@@ -384,7 +384,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                       final BarberService placeholder = const BarberService(
                         id: 'haircut-main',
                         name: 'Haircut',
-                        description: 'Signature Bruno\'s haircut crafted to your chosen style.',
+                        description: 'Signature Gentleman haircut crafted to your chosen style.',
                         price: 480,
                         durationMinutes: 45,
                         icon: Icons.content_cut,

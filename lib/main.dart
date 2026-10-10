@@ -27,7 +27,7 @@ class BarbershopApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Bruno's Barbers",
+      title: "Gentleman Barbershop",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

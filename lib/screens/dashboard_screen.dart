@@ -59,7 +59,7 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildHeroSection(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -72,28 +72,55 @@ class DashboardScreen extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "BARBERSHOP",
-                    style: TextStyle(
-                      color: Color(0xFFD4A853),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 3,
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD4A853).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.asset(
+                        'web/assets/Gentleman_Barbershop_Crest-removebg-preview.png',
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.cut,
+                          color: Color(0xFFD4A853),
+                          size: 28,
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    "PREMIUM",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 2,
-                    ),
+                  const SizedBox(width: 14),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "GENTLEMAN",
+                        style: TextStyle(
+                          color: Color(0xFFD4A853),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 3,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "BARBERSHOP",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -202,9 +229,9 @@ class DashboardScreen extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 4,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 0.90,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 8,
+            childAspectRatio: 0.78,
             padding: EdgeInsets.zero,
             children: [
               _buildQuickActionCard(
@@ -263,14 +290,14 @@ class DashboardScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(14),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
         decoration: BoxDecoration(
           color: highlight
               ? const Color(0xFFD4A853).withValues(alpha: 0.08)
               : const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: highlight
                 ? const Color(0xFFD4A853).withValues(alpha: 0.45)
@@ -282,32 +309,34 @@ class DashboardScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
                 color: highlight
                     ? const Color(0xFFD4A853).withValues(alpha: 0.18)
                     : const Color(0xFFD4A853).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(9),
               ),
               child: Icon(
                 icon,
                 color: const Color(0xFFD4A853),
-                size: 20,
+                size: 18,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: highlight ? const Color(0xFFD4A853) : Colors.white,
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                height: 1.25,
+            const SizedBox(height: 7),
+            Flexible(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: highlight ? const Color(0xFFD4A853) : Colors.white,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -531,7 +560,7 @@ class DashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           const Text(
-            "Bruno's in your hands.",
+            "Gentleman in your hands.",
             style: TextStyle(
               color: Color(0xFF999999),
               fontSize: 14,
@@ -670,7 +699,7 @@ class DashboardScreen extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 0.88,
+              childAspectRatio: 0.78,
             ),
             itemCount: styles.length,
             itemBuilder: (ctx, i) {
@@ -1115,7 +1144,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        "(02) 89-BRUNOS",
+                        "(02) 89-GENTLE",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

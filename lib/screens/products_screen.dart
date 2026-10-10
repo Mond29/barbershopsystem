@@ -59,7 +59,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Bruno's Products",
+                      "Gentleman Products",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -447,7 +447,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           child: OutlinedButton.icon(
                             onPressed: () async {
                               Navigator.of(context).pop();
-                              final url = Uri.parse('https://brunosbarbers.com/our-products');
+                              final url = Uri.parse('https://gentlemanbarbers.com/our-products');
                               try { await launchUrl(url); } catch (_) {}
                             },
                             icon: const Icon(Icons.open_in_new, size: 16),
@@ -538,7 +538,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ),
           const SizedBox(height: 16),
           const Text(
-            "Bruno's Gift Cards",
+            "Gentleman Gift Cards",
             style: TextStyle(
               color: Color(0xFF0F0F0F),
               fontSize: 22,
@@ -566,7 +566,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           ),
           const SizedBox(height: 4),
           const Text(
-            "Bulk orders? Email info@brunosbarbers.com",
+            "Bulk orders? Email info@gentlemanbarbers.com",
             style: TextStyle(
               color: Color(0xCC0F0F0F),
               fontSize: 12,
@@ -581,7 +581,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               onPressed: () async {
                 final uri = Uri(
                   scheme: 'mailto',
-                  path: 'info@brunosbarbers.com',
+                  path: 'info@gentlemanbarbers.com',
                   queryParameters: {'subject': 'Gift Card / Corporate Sales Inquiry'},
                 );
                 try { await launchUrl(uri); } catch (_) {}

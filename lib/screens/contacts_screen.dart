@@ -267,7 +267,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
           const Icon(Icons.support_agent, color: Color(0xFF0F0F0F), size: 32),
           const SizedBox(height: 16),
           const Text(
-            "Bruno's Concierge",
+            "Gentleman Concierge",
             style: TextStyle(
               color: Color(0xFF0F0F0F),
               fontSize: 22,
@@ -291,7 +291,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
               InkWell(
                 onTap: () => _callBranch("0289278667"),
                 child: const Text(
-                  "(02) 89-BRUNOS / +632 8927 8667",
+                  "(02) 89-GENTLE / +632 8927 8667",
                   style: TextStyle(
                     color: Color(0xFF0F0F0F),
                     fontSize: 14,
@@ -325,12 +325,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
           child: _buildQuickActionCard(
             icon: Icons.email,
             label: "Email",
-            sublabel: "info@brunosbarbers.com",
+            sublabel: "info@gentlemanbarbers.com",
             color: const Color(0xFF3498DB).withValues(alpha: 0.15),
             iconColor: const Color(0xFF3498DB),
             onTap: () => _launchUrl(Uri(
               scheme: 'mailto',
-              path: 'info@brunosbarbers.com',
+              path: 'info@gentlemanbarbers.com',
               queryParameters: {'subject': 'Customer Inquiry'},
             )),
           ),
@@ -340,10 +340,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
           child: _buildQuickActionCard(
             icon: Icons.facebook,
             label: "Message",
-            sublabel: "@brunosbarbers",
+            sublabel: "@gentlemanbarbers",
             color: const Color(0xFF1877F2).withValues(alpha: 0.15),
             iconColor: const Color(0xFF1877F2),
-            onTap: () => _launchUrl(Uri.parse('https://facebook.com/brunosbarbersph')),
+            onTap: () => _launchUrl(Uri.parse('https://facebook.com/gentlemanbarbersph')),
           ),
         ),
       ],
