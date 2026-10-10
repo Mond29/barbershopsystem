@@ -54,8 +54,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
     final normalized = cleaned.startsWith('0')
         ? '+63${cleaned.substring(1)}'
         : cleaned.startsWith('63')
-            ? '+$cleaned'
-            : cleaned;
+        ? '+$cleaned'
+        : cleaned;
     final telUri = Uri(scheme: 'tel', path: normalized);
     await _launchUrl(telUri);
   }
@@ -74,7 +74,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
   }
 
   List<Branch> get _regionBranches {
-    return SampleData.branches.where((b) => b.region == _selectedRegion).toList();
+    return SampleData.branches
+        .where((b) => b.region == _selectedRegion)
+        .toList();
   }
 
   List<Branch> get _filteredBranches {
@@ -84,10 +86,12 @@ class _ContactsScreenState extends State<ContactsScreen> {
     }
     final query = _searchCity!.toLowerCase();
     return list
-        .where((b) =>
-            b.city.toLowerCase().contains(query) ||
-            b.name.toLowerCase().contains(query) ||
-            b.address.toLowerCase().contains(query))
+        .where(
+          (b) =>
+              b.city.toLowerCase().contains(query) ||
+              b.name.toLowerCase().contains(query) ||
+              b.address.toLowerCase().contains(query),
+        )
         .toList();
   }
 
@@ -127,10 +131,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                     SizedBox(height: 6),
                     Text(
                       "Get in touch with us or visit our 40+ branches nationwide.",
-                      style: TextStyle(
-                        color: Color(0xFF999999),
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Color(0xFF999999), fontSize: 14),
                     ),
                   ],
                 ),
@@ -210,7 +211,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             width: 72,
                             height: 72,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD4A853).withValues(alpha: 0.12),
+                              color: const Color(
+                                0xFFD4A853,
+                              ).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(18),
                             ),
                             child: const Icon(
@@ -288,15 +291,18 @@ class _ContactsScreenState extends State<ContactsScreen> {
             children: [
               const Icon(Icons.phone, color: Color(0xFF0F0F0F), size: 18),
               const SizedBox(width: 8),
-              InkWell(
-                onTap: () => _callBranch("0289278667"),
-                child: const Text(
-                  "(02) 89-GENTLE / +632 8927 8667",
-                  style: TextStyle(
-                    color: Color(0xFF0F0F0F),
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
+              Expanded(
+                child: InkWell(
+                  onTap: () => _callBranch("0289278667"),
+                  child: const Text(
+                    "(02) 89-GENTLE / +632 8927 8667",
+                    softWrap: true,
+                    style: TextStyle(
+                      color: Color(0xFF0F0F0F),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ),
@@ -328,11 +334,13 @@ class _ContactsScreenState extends State<ContactsScreen> {
             sublabel: "info@gentlemanbarbers.com",
             color: const Color(0xFF3498DB).withValues(alpha: 0.15),
             iconColor: const Color(0xFF3498DB),
-            onTap: () => _launchUrl(Uri(
-              scheme: 'mailto',
-              path: 'info@gentlemanbarbers.com',
-              queryParameters: {'subject': 'Customer Inquiry'},
-            )),
+            onTap: () => _launchUrl(
+              Uri(
+                scheme: 'mailto',
+                path: 'info@gentlemanbarbers.com',
+                queryParameters: {'subject': 'Customer Inquiry'},
+              ),
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -343,7 +351,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
             sublabel: "@gentlemanbarbers",
             color: const Color(0xFF1877F2).withValues(alpha: 0.15),
             iconColor: const Color(0xFF1877F2),
-            onTap: () => _launchUrl(Uri.parse('https://facebook.com/gentlemanbarbersph')),
+            onTap: () => _launchUrl(
+              Uri.parse('https://facebook.com/gentlemanbarbersph'),
+            ),
           ),
         ),
       ],
@@ -392,10 +402,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
             Text(
               sublabel,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color(0xFF777777),
-                fontSize: 10,
-              ),
+              style: const TextStyle(color: Color(0xFF777777), fontSize: 10),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -429,14 +436,18 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: isActive ? const Color(0xFFD4A853) : Colors.transparent,
+                  color: isActive
+                      ? const Color(0xFFD4A853)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
                   child: Text(
                     region,
                     style: TextStyle(
-                      color: isActive ? const Color(0xFF0F0F0F) : const Color(0xFFAAAAAA),
+                      color: isActive
+                          ? const Color(0xFF0F0F0F)
+                          : const Color(0xFFAAAAAA),
                       fontSize: 12,
                       fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
                     ),
@@ -464,21 +475,29 @@ class _ContactsScreenState extends State<ContactsScreen> {
         decoration: InputDecoration(
           hintText: "Search branch or city...",
           hintStyle: const TextStyle(color: Color(0xFF666666), fontSize: 15),
-          prefixIcon:
-              const Icon(Icons.search, color: Color(0xFFD4A853), size: 22),
+          prefixIcon: const Icon(
+            Icons.search,
+            color: Color(0xFFD4A853),
+            size: 22,
+          ),
           suffixIcon: _searchCity != null && _searchCity!.isNotEmpty
               ? IconButton(
                   onPressed: () {
                     _searchController.clear();
                     setState(() => _searchCity = null);
                   },
-                  icon:
-                      const Icon(Icons.clear, color: Color(0xFF666666), size: 20),
+                  icon: const Icon(
+                    Icons.clear,
+                    color: Color(0xFF666666),
+                    size: 20,
+                  ),
                 )
               : null,
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
     );
@@ -497,19 +516,17 @@ class _ContactsScreenState extends State<ContactsScreen> {
             setState(() => _searchCity = null);
           },
         ),
-        ...cities.map(
-          (city) {
-            final isSelected = _searchCity?.toLowerCase() == city.toLowerCase();
-            return _buildChip(
-              label: city,
-              isSelected: isSelected,
-              onTap: () {
-                _searchController.text = city;
-                setState(() => _searchCity = city);
-              },
-            );
-          },
-        ),
+        ...cities.map((city) {
+          final isSelected = _searchCity?.toLowerCase() == city.toLowerCase();
+          return _buildChip(
+            label: city,
+            isSelected: isSelected,
+            onTap: () {
+              _searchController.text = city;
+              setState(() => _searchCity = city);
+            },
+          );
+        }),
       ],
     );
   }
@@ -561,11 +578,16 @@ class _ContactsScreenState extends State<ContactsScreen> {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFD4A853).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFD4A853).withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: const Color(0xFFD4A853).withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Text(
                     city.toUpperCase(),
@@ -706,12 +728,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             constraints: BoxConstraints(
                               maxWidth: MediaQuery.of(context).size.width * 0.4,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD4A853).withValues(alpha: 0.1),
+                              color: const Color(
+                                0xFFD4A853,
+                              ).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: const Color(0xFFD4A853).withValues(alpha: 0.25),
+                                color: const Color(
+                                  0xFFD4A853,
+                                ).withValues(alpha: 0.25),
                               ),
                             ),
                             child: Row(
@@ -828,20 +857,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: const Color(0xFFD4A853),
-              size: 16,
-            ),
+            Icon(icon, color: const Color(0xFFD4A853), size: 16),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 label,
                 style: TextStyle(
-                  color: isPhone ? const Color(0xFFD4A853) : const Color(0xFFBBBBBB),
+                  color: isPhone
+                      ? const Color(0xFFD4A853)
+                      : const Color(0xFFBBBBBB),
                   fontSize: 13,
-                  decoration:
-                      isPhone ? TextDecoration.underline : TextDecoration.none,
+                  decoration: isPhone
+                      ? TextDecoration.underline
+                      : TextDecoration.none,
                   decorationColor: const Color(0xFFD4A853),
                 ),
               ),
