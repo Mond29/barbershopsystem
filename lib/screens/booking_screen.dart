@@ -33,6 +33,8 @@ class BookingScreenState extends State<BookingScreen> {
   int? _selectedBarberIndex;
   int _currentStep = 0;
 
+  Branch get _defaultBranch => SampleData.branches.first;
+
   final List<String> _barbers = const [
     "Master Barber Alex",
     "Senior Barber Ben",
@@ -46,7 +48,7 @@ class BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     _selectedService = widget.preselectedService;
-    _selectedBranch = widget.preselectedBranch;
+    _selectedBranch = _defaultBranch;
   }
 
   @override
@@ -73,6 +75,9 @@ class BookingScreenState extends State<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final horizontalPadding = screenWidth < 390 ? 16.0 : 24.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F0F),
       body: SafeArea(
@@ -80,24 +85,29 @@ class BookingScreenState extends State<BookingScreen> {
           key: _formKey,
           child: Column(
             children: [
-              _buildHeader(),
-              _buildStepper(),
+              _buildHeader(horizontalPadding),
+              _buildStepper(horizontalPadding),
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     return SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
+                      padding: EdgeInsets.fromLTRB(
+                        horizontalPadding,
+                        8,
+                        horizontalPadding,
+                        20,
+                      ),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                        child: IntrinsicHeight(
-                          child: _buildCurrentStep(),
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
                         ),
+                        child: IntrinsicHeight(child: _buildCurrentStep()),
                       ),
                     );
                   },
                 ),
               ),
-              _buildBottomButtons(),
+              _buildBottomButtons(horizontalPadding),
             ],
           ),
         ),
@@ -105,83 +115,93 @@ class BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(double horizontalPadding) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        14,
+        horizontalPadding,
+        14,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             "Book Appointment",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 28,
+              fontSize: MediaQuery.sizeOf(context).width < 390 ? 26 : 28,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 6),
-          Text(
+          const SizedBox(height: 6),
+          const Text(
             "Your seat's waiting — 4 easy steps.",
-            style: TextStyle(
-              color: Color(0xFF999999),
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStepper() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          _buildStepCircle(1, "Location\n& Service", 0),
-          _buildStepConnector(0),
-          _buildStepCircle(2, "Date &\nTime", 1),
-          _buildStepConnector(1),
-          _buildStepCircle(3, "Special\nRequests", 2),
-          _buildStepConnector(2),
-          _buildStepCircle(4, "Your\nInfo", 3),
-        ],
-      ),
+  Widget _buildStepper(double horizontalPadding) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 390;
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+          child: Row(
+            children: [
+              _buildStepCircle(1, "Location\n& Service", 0, compact),
+              _buildStepConnector(0),
+              _buildStepCircle(2, "Date &\nTime", 1, compact),
+              _buildStepConnector(1),
+              _buildStepCircle(3, "Special\nRequests", 2, compact),
+              _buildStepConnector(2),
+              _buildStepCircle(4, "Your\nInfo", 3, compact),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildStepCircle(int number, String label, int index) {
+  Widget _buildStepCircle(int number, String label, int index, bool compact) {
+    final itemWidth = compact ? 52.0 : 62.0;
+    final circleSize = compact ? 34.0 : 38.0;
     final isActive = _currentStep >= index;
     final isCurrent = _currentStep == index;
     return SizedBox(
-      width: 62,
+      width: itemWidth,
       child: Column(
         children: [
           Container(
-            width: 38,
-            height: 38,
+            width: circleSize,
+            height: circleSize,
             decoration: BoxDecoration(
-              color: isActive ? const Color(0xFFD4A853) : const Color(0xFF1A1A1A),
+              color: isActive
+                  ? const Color(0xFFD4A853)
+                  : const Color(0xFF1A1A1A),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isCurrent
                     ? const Color(0xFFD4A853)
                     : isActive
-                        ? const Color(0xFFD4A853)
-                        : const Color(0xFF2A2A2A),
+                    ? const Color(0xFFD4A853)
+                    : const Color(0xFF2A2A2A),
                 width: isCurrent ? 2.5 : 1,
               ),
             ),
             child: Center(
               child: isActive && index < _currentStep
-                  ? const Icon(Icons.check,
-                      color: Color(0xFF0F0F0F), size: 18)
+                  ? const Icon(Icons.check, color: Color(0xFF0F0F0F), size: 18)
                   : Text(
                       "$number",
                       style: TextStyle(
                         color: isActive
                             ? const Color(0xFF0F0F0F)
                             : Colors.white,
-                        fontSize: 13,
+                        fontSize: compact ? 12 : 13,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -195,7 +215,7 @@ class BookingScreenState extends State<BookingScreen> {
               color: isActive
                   ? const Color(0xFFD4A853)
                   : const Color(0xFF666666),
-              fontSize: 10,
+              fontSize: compact ? 9 : 10,
               fontWeight: FontWeight.w600,
               height: 1.2,
             ),
@@ -242,18 +262,27 @@ class BookingScreenState extends State<BookingScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        _buildBigSection("Select your location", "Choose a branch near you"),
+        _buildBigSection(
+          "Your location",
+          "Automatically selected for this booking",
+        ),
         const SizedBox(height: 10),
         _buildBranchShortList(),
         const SizedBox(height: 20),
-        _buildBigSection("Pick your service", "Tap a service to select, then choose options"),
+        _buildBigSection(
+          "Pick your service",
+          "Tap a service to select, then choose options",
+        ),
         const SizedBox(height: 10),
         _buildServiceShortList(),
         if (_selectedService != null &&
             (_selectedService!.subServices != null &&
                 _selectedService!.subServices!.isNotEmpty)) ...[
           const SizedBox(height: 16),
-          _buildBigSection("Choose option", "What specific ${_selectedService!.name}?"),
+          _buildBigSection(
+            "Choose option",
+            "What specific ${_selectedService!.name}?",
+          ),
           const SizedBox(height: 10),
           _buildSubServiceSelector(),
         ],
@@ -264,83 +293,71 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   Widget _buildBranchShortList() {
-    final metro = SampleData.branches
-        .where((b) => b.region == 'Metro Manila')
-        .take(6)
-        .toList();
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: metro.map((b) {
-        final isSel = _selectedBranch?.id == b.id;
-        return InkWell(
-          onTap: () => setState(() => _selectedBranch = b),
+    final branch = _defaultBranch;
+    return Semantics(
+      label: '${branch.name}, selected location',
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFD4A853).withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.43,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isSel
-                  ? const Color(0xFFD4A853).withValues(alpha: 0.08)
-                  : const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSel ? const Color(0xFFD4A853) : const Color(0xFF2A2A2A),
-                width: isSel ? 1.5 : 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          border: Border.all(color: const Color(0xFFD4A853), width: 1.5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: isSel
-                            ? const Color(0xFFD4A853)
-                            : const Color(0xFFD4A853)
-                                .withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.location_on,
-                        color: isSel
-                            ? const Color(0xFF0F0F0F)
-                            : const Color(0xFFD4A853),
-                        size: 14,
-                      ),
-                    ),
-                    const Spacer(),
-                    if (isSel)
-                      const Icon(Icons.check_circle,
-                          color: Color(0xFFD4A853), size: 16),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  b.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4A853),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  b.city,
-                  style: const TextStyle(
-                    color: Color(0xFF888888),
-                    fontSize: 11,
+                  child: Icon(
+                    Icons.location_on,
+                    color: const Color(0xFF0F0F0F),
+                    size: 14,
                   ),
+                ),
+                const Spacer(),
+                const Text(
+                  'ONLY LOCATION',
+                  style: TextStyle(
+                    color: Color(0xFFD4A853),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: .8,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.check_circle,
+                  color: Color(0xFFD4A853),
+                  size: 18,
                 ),
               ],
             ),
-          ),
-        );
-      }).toList(),
+            const SizedBox(height: 8),
+            Text(
+              branch.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              branch.city,
+              style: const TextStyle(color: Color(0xFF888888), fontSize: 11),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -351,8 +368,9 @@ class BookingScreenState extends State<BookingScreen> {
         .toList();
     return Column(
       children: categories.map((cat) {
-        final svcs =
-            SampleData.services.where((s) => s.category == cat).toList();
+        final svcs = SampleData.services
+            .where((s) => s.category == cat)
+            .toList();
         if (svcs.isEmpty) return const SizedBox.shrink();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,7 +401,9 @@ class BookingScreenState extends State<BookingScreen> {
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 12),
+                      horizontal: 14,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: isSel
                           ? const Color(0xFFD4A853).withValues(alpha: 0.08)
@@ -403,8 +423,9 @@ class BookingScreenState extends State<BookingScreen> {
                           decoration: BoxDecoration(
                             color: isSel
                                 ? const Color(0xFFD4A853)
-                                : const Color(0xFFD4A853)
-                                    .withValues(alpha: 0.12),
+                                : const Color(
+                                    0xFFD4A853,
+                                  ).withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Icon(
@@ -433,7 +454,9 @@ class BookingScreenState extends State<BookingScreen> {
                                 Text(
                                   "${s.subServices!.length} options",
                                   style: const TextStyle(
-                                      color: Color(0xFF888888), fontSize: 11),
+                                    color: Color(0xFF888888),
+                                    fontSize: 11,
+                                  ),
                                 ),
                             ],
                           ),
@@ -476,9 +499,7 @@ class BookingScreenState extends State<BookingScreen> {
             width: MediaQuery.of(context).size.width * 0.43,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isSel
-                  ? const Color(0xFFD4A853)
-                  : const Color(0xFF1A1A1A),
+              color: isSel ? const Color(0xFFD4A853) : const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSel
@@ -541,11 +562,17 @@ class BookingScreenState extends State<BookingScreen> {
         const SizedBox(height: 14),
         _buildDateSelector(),
         const SizedBox(height: 28),
-        _buildBigSection("Pick a time slot", "We recommend 30 min before peak hours"),
+        _buildBigSection(
+          "Pick a time slot",
+          "We recommend 30 min before peak hours",
+        ),
         const SizedBox(height: 14),
         _buildTimeSelector(),
         const SizedBox(height: 28),
-        _buildBigSection("Choose barber / stylist", "Optional — we'll assign the best available"),
+        _buildBigSection(
+          "Choose barber / stylist",
+          "Optional — we'll assign the best available",
+        ),
         const SizedBox(height: 14),
         _buildBarberSelector(),
       ],
@@ -660,8 +687,9 @@ class BookingScreenState extends State<BookingScreen> {
                   const SizedBox(height: 4),
                   Text(
                     _selectedDate != null
-                        ? DateFormat('EEEE, MMMM d, yyyy')
-                            .format(_selectedDate!)
+                        ? DateFormat(
+                            'EEEE, MMMM d, yyyy',
+                          ).format(_selectedDate!)
                         : "Tap to select date",
                     style: TextStyle(
                       color: _selectedDate != null
@@ -714,9 +742,7 @@ class BookingScreenState extends State<BookingScreen> {
               child: Text(
                 slot,
                 style: TextStyle(
-                  color: isSelected
-                      ? const Color(0xFF0F0F0F)
-                      : Colors.white,
+                  color: isSelected ? const Color(0xFF0F0F0F) : Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
@@ -759,8 +785,7 @@ class BookingScreenState extends State<BookingScreen> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFD4A853)
-                        : const Color(0xFFD4A853)
-                            .withValues(alpha: 0.12),
+                        : const Color(0xFFD4A853).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(9),
                   ),
                   child: Icon(
@@ -775,9 +800,7 @@ class BookingScreenState extends State<BookingScreen> {
                 Text(
                   _barbers[index],
                   style: TextStyle(
-                    color: isSelected
-                        ? Colors.white
-                        : const Color(0xFFBBBBBB),
+                    color: isSelected ? Colors.white : const Color(0xFFBBBBBB),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -796,8 +819,7 @@ class BookingScreenState extends State<BookingScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        _buildBigSection(
-            "Special requests", "Anything you want us to know?"),
+        _buildBigSection("Special requests", "Anything you want us to know?"),
         const SizedBox(height: 8),
         const Text(
           "Feel free to leave it blank! You can also tell our staff in-person.",
@@ -817,7 +839,11 @@ class BookingScreenState extends State<BookingScreen> {
             decoration: const InputDecoration(
               hintText:
                   "e.g.\n• My hair grows fast on the right side\n• Save some length on top\n• Allergic to hair dye\n• Inspired by \"Crew Cut\" style",
-              hintStyle: TextStyle(color: Color(0xFF666666), fontSize: 13, height: 1.5),
+              hintStyle: TextStyle(
+                color: Color(0xFF666666),
+                fontSize: 13,
+                height: 1.5,
+              ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(16),
             ),
@@ -992,7 +1018,9 @@ class BookingScreenState extends State<BookingScreen> {
       children: [
         const SizedBox(height: 16),
         _buildBigSection(
-            "Your details", "Contact info for appointment reminders"),
+          "Your details",
+          "Contact info for appointment reminders",
+        ),
         const SizedBox(height: 20),
         _buildTextField(
           controller: _nameController,
@@ -1057,8 +1085,7 @@ class BookingScreenState extends State<BookingScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Icon(Icons.info_outline,
-                  color: Color(0xFFD4A853), size: 18),
+              Icon(Icons.info_outline, color: Color(0xFFD4A853), size: 18),
               SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -1110,10 +1137,8 @@ class BookingScreenState extends State<BookingScreen> {
           style: const TextStyle(color: Colors.white, fontSize: 14),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle:
-                const TextStyle(color: Color(0xFF555555), fontSize: 14),
-            prefixIcon:
-                Icon(icon, color: const Color(0xFFD4A853), size: 20),
+            hintStyle: const TextStyle(color: Color(0xFF555555), fontSize: 14),
+            prefixIcon: Icon(icon, color: const Color(0xFFD4A853), size: 20),
             filled: true,
             fillColor: const Color(0xFF1A1A1A),
             contentPadding: EdgeInsets.symmetric(
@@ -1127,17 +1152,17 @@ class BookingScreenState extends State<BookingScreen> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                  color: Color(0xFFD4A853), width: 1.5),
+                color: Color(0xFFD4A853),
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                  color: Colors.redAccent, width: 1.5),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                  color: Colors.redAccent, width: 1.5),
+              borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
             ),
           ),
         ),
@@ -1193,13 +1218,19 @@ class BookingScreenState extends State<BookingScreen> {
                 : "Any available",
           ),
           const SizedBox(height: 10),
-          _summaryRow("Client", _nameController.text.trim().isEmpty
-              ? "—"
-              : _nameController.text.trim()),
+          _summaryRow(
+            "Client",
+            _nameController.text.trim().isEmpty
+                ? "—"
+                : _nameController.text.trim(),
+          ),
           const SizedBox(height: 10),
-          _summaryRow("Phone", _phoneController.text.trim().isEmpty
-              ? "—"
-              : _phoneController.text.trim()),
+          _summaryRow(
+            "Phone",
+            _phoneController.text.trim().isEmpty
+                ? "—"
+                : _phoneController.text.trim(),
+          ),
           if (_requestsController.text.trim().isNotEmpty) ...[
             const SizedBox(height: 10),
             _summaryRow("Requests", _requestsController.text.trim()),
@@ -1232,7 +1263,7 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   // ====== BOTTOM NAV / STEP BUTTONS ======
-  Widget _buildBottomButtons() {
+  Widget _buildBottomButtons(double horizontalPadding) {
     bool canProceed = true;
     String? errorMsg;
 
@@ -1254,7 +1285,12 @@ class BookingScreenState extends State<BookingScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        12,
+        horizontalPadding,
+        16,
+      ),
       decoration: const BoxDecoration(
         color: Color(0xFF0F0F0F),
         border: Border(top: BorderSide(color: Color(0xFF1A1A1A))),
@@ -1275,9 +1311,10 @@ class BookingScreenState extends State<BookingScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text("Back",
-                      style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "Back",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             if (_currentStep > 0) const SizedBox(width: 12),
@@ -1297,8 +1334,9 @@ class BookingScreenState extends State<BookingScreen> {
                     : () {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(errorMsg ??
-                                "Complete required fields first"),
+                            content: Text(
+                              errorMsg ?? "Complete required fields first",
+                            ),
                             backgroundColor: Colors.redAccent,
                             behavior: SnackBarBehavior.floating,
                           ),
@@ -1322,7 +1360,9 @@ class BookingScreenState extends State<BookingScreen> {
                       ? "Confirm Booking"
                       : "Next Step ${_currentStep + 2}/4",
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -1392,8 +1432,7 @@ class BookingScreenState extends State<BookingScreen> {
                   children: [
                     _buildDialogRow("Service", _serviceNameDisplay),
                     const SizedBox(height: 6),
-                    _buildDialogRow(
-                        "Branch", _selectedBranch?.name ?? "—"),
+                    _buildDialogRow("Branch", _selectedBranch?.name ?? "—"),
                     const SizedBox(height: 6),
                     _buildDialogRow(
                       "When",
@@ -1435,10 +1474,7 @@ class BookingScreenState extends State<BookingScreen> {
                   ),
                   child: const Text(
                     "Done",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -1453,10 +1489,7 @@ class BookingScreenState extends State<BookingScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          k,
-          style: const TextStyle(color: Color(0xFF666666), fontSize: 12),
-        ),
+        Text(k, style: const TextStyle(color: Color(0xFF666666), fontSize: 12)),
         Flexible(
           child: Text(
             v,
@@ -1478,7 +1511,7 @@ class BookingScreenState extends State<BookingScreen> {
     setState(() {
       _currentStep = 0;
       _selectedService = widget.preselectedService;
-      _selectedBranch = widget.preselectedBranch;
+      _selectedBranch = _defaultBranch;
       _selectedSubService = null;
       _selectedDate = null;
       _selectedTime = null;
