@@ -63,4 +63,29 @@ void main() {
     );
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('barber cards form an even responsive grid', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BookingScreen(preselectedService: SampleData.services.first),
+      ),
+    );
+    await tester.tap(find.text('Next Step 2/4'));
+    await tester.pumpAndSettle();
+
+    final firstCard = find.byKey(const ValueKey('barber-card-0'));
+    final secondCard = find.byKey(const ValueKey('barber-card-1'));
+    final lastCard = find.byKey(const ValueKey('barber-card-5'));
+
+    expect(tester.getSize(firstCard), tester.getSize(secondCard));
+    expect(tester.getSize(firstCard), tester.getSize(lastCard));
+    expect(tester.takeException(), isNull);
+  });
 }

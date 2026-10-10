@@ -779,57 +779,77 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   Widget _buildBarberSelector() {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final contentWidth = screenWidth - (screenWidth < 390 ? 32 : 48);
+    final cardWidth = screenWidth < 332
+        ? contentWidth
+        : (contentWidth - 12) / 2;
+
     return Wrap(
-      spacing: 10,
-      runSpacing: 10,
+      spacing: 12,
+      runSpacing: 12,
       children: List.generate(_barbers.length, (index) {
         final isSelected = _selectedBarberIndex == index;
-        return InkWell(
-          onTap: () => setState(() => _selectedBarberIndex = index),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color(0xFFD4A853).withValues(alpha: 0.08)
-                  : const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
+        return SizedBox(
+          key: ValueKey('barber-card-$index'),
+          width: cardWidth,
+          height: 80,
+          child: InkWell(
+            onTap: () => setState(() => _selectedBarberIndex = index),
+            borderRadius: BorderRadius.circular(14),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFFD4A853)
-                    : const Color(0xFF2A2A2A),
+                    ? const Color(0xFFD4A853).withValues(alpha: 0.08)
+                    : const Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isSelected
+                      ? const Color(0xFFD4A853)
+                      : const Color(0xFF2A2A2A),
+                  width: isSelected ? 1.5 : 1,
+                ),
               ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color(0xFFD4A853)
-                        : const Color(0xFFD4A853).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(9),
+              child: Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFFD4A853)
+                          : const Color(0xFFD4A853).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      color: isSelected
+                          ? const Color(0xFF0F0F0F)
+                          : const Color(0xFFD4A853),
+                      size: 18,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.person,
-                    color: isSelected
-                        ? const Color(0xFF0F0F0F)
-                        : const Color(0xFFD4A853),
-                    size: 16,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _barbers[index],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: isSelected
+                            ? Colors.white
+                            : const Color(0xFFBBBBBB),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  _barbers[index],
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : const Color(0xFFBBBBBB),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
