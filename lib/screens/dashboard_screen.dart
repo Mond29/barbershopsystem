@@ -836,11 +836,11 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  _buildStatItem("35+", "Years of Service"),
-                  const SizedBox(width: 24),
-                  _buildStatItem("40+", "Branches"),
-                  const SizedBox(width: 24),
-                  _buildStatItem("500K+", "Happy Clients"),
+                  Expanded(child: _buildStatItem("35+", "Years of Service")),
+                  const SizedBox(width: 8),
+                  Expanded(child: _buildStatItem("40+", "Branches")),
+                  const SizedBox(width: 8),
+                  Expanded(child: _buildStatItem("500K+", "Happy Clients")),
                 ],
               ),
               const SizedBox(height: 20),
