@@ -46,7 +46,7 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildAboutPreview(),
               const SizedBox(height: 32),
-              _buildBranchPreview(branches),
+              _buildBranchPreview(context, branches),
               const SizedBox(height: 32),
               _buildGiftCardsBanner(),
               const SizedBox(height: 28),
@@ -116,13 +116,18 @@ class DashboardScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 4),
-                          Text(
-                            "BARBERSHOP",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 2,
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "BARBERSHOP",
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 1.4,
+                              ),
                             ),
                           ),
                         ],
@@ -364,22 +369,32 @@ class DashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Our Services",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Text(
+                  "Our Services",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              TextButton(
-                onPressed: () => onNavigate(1),
-                child: const Text(
-                  "View All (12)",
-                  style: TextStyle(
-                    color: Color(0xFFD4A853),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+              const SizedBox(width: 8),
+              Flexible(
+                child: TextButton(
+                  onPressed: () => onNavigate(1),
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "View All (12)",
+                      style: TextStyle(
+                        color: Color(0xFFD4A853),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -543,22 +558,32 @@ class DashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Featured Products",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Text(
+                  "Featured Products",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              TextButton(
-                onPressed: onOpenProducts,
-                child: const Text(
-                  "Shop All",
-                  style: TextStyle(
-                    color: Color(0xFFD4A853),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+              const SizedBox(width: 8),
+              Flexible(
+                child: TextButton(
+                  onPressed: onOpenProducts,
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "Shop All",
+                      style: TextStyle(
+                        color: Color(0xFFD4A853),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -660,22 +685,32 @@ class DashboardScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Hairstyle Guide",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Text(
+                  "Hairstyle Guide",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-              TextButton(
-                onPressed: onOpenHairstyle,
-                child: const Text(
-                  "View All (7)",
-                  style: TextStyle(
-                    color: Color(0xFFD4A853),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+              const SizedBox(width: 8),
+              Flexible(
+                child: TextButton(
+                  onPressed: onOpenHairstyle,
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "View All (7)",
+                      style: TextStyle(
+                        color: Color(0xFFD4A853),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -769,7 +804,9 @@ class DashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -789,7 +826,6 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
@@ -901,27 +937,33 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBranchPreview(List<Branch> branches) {
+  Widget _buildBranchPreview(BuildContext context, List<Branch> branches) {
+    final compact = MediaQuery.sizeOf(context).width < 390;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: compact ? 16 : 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Our Branches",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Text(
+                  "Our Location",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               TextButton(
                 onPressed: () => onNavigate(3),
                 child: const Text(
-                  "All 40+ Branches",
+                  "View Details",
                   style: TextStyle(
                     color: Color(0xFFD4A853),
                     fontSize: 14,
@@ -1144,21 +1186,24 @@ class DashboardScreen extends StatelessWidget {
                     color: const Color(0xFF0F0F0F),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.phone, color: Color(0xFFD4A853), size: 20),
-                      SizedBox(width: 10),
-                      Text(
-                        "(02) 89-GENTLE",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
+                  child: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.phone, color: Color(0xFFD4A853), size: 20),
+                        SizedBox(width: 10),
+                        Text(
+                          "(02) 89-GENTLE",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

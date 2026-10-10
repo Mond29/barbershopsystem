@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/services_screen.dart';
 import 'screens/booking_screen.dart';
@@ -12,12 +13,14 @@ import 'data/sample_data.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Color(0xFF0F0F0F),
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Color(0xFF0F0F0F),
-    systemNavigationBarIconBrightness: Brightness.light,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF0F0F0F),
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Color(0xFF0F0F0F),
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
   runApp(const BarbershopApp());
 }
 
@@ -26,6 +29,10 @@ class BarbershopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final manropeTextTheme = GoogleFonts.manropeTextTheme(
+      ThemeData.dark(useMaterial3: true).textTheme,
+    ).apply(bodyColor: Colors.white, displayColor: Colors.white);
+
     return MaterialApp(
       title: "Gentleman Barbershop",
       debugShowCheckedModeBanner: false,
@@ -49,13 +56,11 @@ class BarbershopApp extends StatelessWidget {
           centerTitle: false,
           scrolledUnderElevation: 0,
         ),
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
+        textTheme: manropeTextTheme.copyWith(
+          titleLarge: manropeTextTheme.titleLarge?.copyWith(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
           ),
-          bodyLarge: TextStyle(color: Colors.white),
-          bodyMedium: TextStyle(color: Colors.white),
         ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: const Color(0xFF1A1A1A),
@@ -94,12 +99,14 @@ class _MainScreenState extends State<MainScreen> {
   void _pushScreen(int tabIndex, Widget screen) {
     final ctx = _navKeys[tabIndex].currentContext;
     if (ctx == null) return;
-    Navigator.of(ctx).push(
-      MaterialPageRoute(builder: (_) => screen),
-    );
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) => screen));
   }
 
-  void _navigateToIndex(int index, {BarberService? preselectedService, Branch? selectedBranch}) {
+  void _navigateToIndex(
+    int index, {
+    BarberService? preselectedService,
+    Branch? selectedBranch,
+  }) {
     if (index == 2) {
       _pendingService = preselectedService ?? _pendingService;
       _pendingBranch = selectedBranch ?? _pendingBranch;
@@ -125,7 +132,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onBookHairstyle(BarberService? service) {
-    _pendingService = service ?? SampleData.services.firstWhere((s) => s.id == 'haircut-main');
+    _pendingService =
+        service ??
+        SampleData.services.firstWhere((s) => s.id == 'haircut-main');
     _pendingBranch = null;
     setState(() => _currentIndex = 2);
   }
@@ -193,9 +202,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildOffstageNavigator(int index, Widget page) {
     return Navigator(
       key: _navKeys[index],
-      onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (_) => page,
-      ),
+      onGenerateRoute: (_) => MaterialPageRoute(builder: (_) => page),
       observers: [HeroController()],
     );
   }
@@ -204,9 +211,7 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xFF121212),
-        border: Border(
-          top: BorderSide(color: Color(0xFF1F1F1F), width: 1),
-        ),
+        border: Border(top: BorderSide(color: Color(0xFF1F1F1F), width: 1)),
       ),
       child: SafeArea(
         top: false,
@@ -216,9 +221,24 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, "Home"),
-              _buildNavItem(1, Icons.content_cut, Icons.content_cut_outlined, "Services"),
-              _buildNavItem(2, Icons.calendar_month, Icons.calendar_month_outlined, "Booking"),
-              _buildNavItem(3, Icons.contact_phone, Icons.contact_phone_outlined, "Contacts"),
+              _buildNavItem(
+                1,
+                Icons.content_cut,
+                Icons.content_cut_outlined,
+                "Services",
+              ),
+              _buildNavItem(
+                2,
+                Icons.calendar_month,
+                Icons.calendar_month_outlined,
+                "Booking",
+              ),
+              _buildNavItem(
+                3,
+                Icons.contact_phone,
+                Icons.contact_phone_outlined,
+                "Contacts",
+              ),
             ],
           ),
         ),
@@ -226,7 +246,12 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildNavItem(int index, IconData activeIcon, IconData icon, String label) {
+  Widget _buildNavItem(
+    int index,
+    IconData activeIcon,
+    IconData icon,
+    String label,
+  ) {
     final isActive = _currentIndex == index;
     return Expanded(
       child: InkWell(

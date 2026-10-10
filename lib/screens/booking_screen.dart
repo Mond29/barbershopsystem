@@ -1401,7 +1401,7 @@ class BookingScreenState extends State<BookingScreen> {
                 ),
                 child: Text(
                   _currentStep == 3
-                      ? "Confirm Booking"
+                      ? "Submit Booking Request"
                       : "Next Step ${_currentStep + 2}/4",
                   style: const TextStyle(
                     fontSize: 15,
@@ -1417,6 +1417,10 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   void _submitBooking() {
+    final submittedAt = DateTime.now();
+    final bookingReference =
+        "GB-${DateFormat('MMdd').format(submittedAt)}-${submittedAt.millisecondsSinceEpoch.toString().substring(7)}";
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1438,15 +1442,15 @@ class BookingScreenState extends State<BookingScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.check,
+                  Icons.hourglass_top_rounded,
                   color: Color(0xFF0F0F0F),
-                  size: 36,
-                  weight: 8,
+                  size: 34,
                 ),
               ),
               const SizedBox(height: 20),
               const Text(
-                "Booking Confirmed!",
+                "Request Submitted",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -1455,7 +1459,7 @@ class BookingScreenState extends State<BookingScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                "Hi ${_nameController.text.trim().isEmpty ? 'there' : _nameController.text.trim()}! Your appointment is confirmed.",
+                "Hi ${_nameController.text.trim().isEmpty ? 'there' : _nameController.text.trim()}! The shop will review your booking before it is confirmed.",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF999999),
@@ -1474,6 +1478,10 @@ class BookingScreenState extends State<BookingScreen> {
                 ),
                 child: Column(
                   children: [
+                    _buildDialogRow("Reference", bookingReference),
+                    const SizedBox(height: 6),
+                    _buildDialogRow("Status", "Pending approval"),
+                    const Divider(color: Color(0xFF2A2A2A), height: 22),
                     _buildDialogRow("Service", _serviceNameDisplay),
                     const SizedBox(height: 6),
                     _buildDialogRow("Branch", _selectedBranch?.name ?? "—"),
@@ -1491,7 +1499,7 @@ class BookingScreenState extends State<BookingScreen> {
               ),
               const SizedBox(height: 12),
               const Text(
-                "See you there! Payment in-store.",
+                "We'll notify you using your contact details once the shop approves or proposes a new schedule.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFFD4A853),
@@ -1517,7 +1525,7 @@ class BookingScreenState extends State<BookingScreen> {
                     elevation: 0,
                   ),
                   child: const Text(
-                    "Done",
+                    "Got it",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
