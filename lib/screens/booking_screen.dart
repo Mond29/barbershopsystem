@@ -1426,111 +1426,125 @@ class BookingScreenState extends State<BookingScreen> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
+          key: const ValueKey('booking-request-receipt'),
           backgroundColor: const Color(0xFF1A1A1A),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
           ),
-          contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFD4A853),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.hourglass_top_rounded,
-                  color: Color(0xFF0F0F0F),
-                  size: 34,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "Request Submitted",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "Hi ${_nameController.text.trim().isEmpty ? 'there' : _nameController.text.trim()}! The shop will review your booking before it is confirmed.",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xFF999999),
-                  fontSize: 14,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0F0F0F),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF2A2A2A)),
-                ),
-                child: Column(
-                  children: [
-                    _buildDialogRow("Reference", bookingReference),
-                    const SizedBox(height: 6),
-                    _buildDialogRow("Status", "Pending approval"),
-                    const Divider(color: Color(0xFF2A2A2A), height: 22),
-                    _buildDialogRow("Service", _serviceNameDisplay),
-                    const SizedBox(height: 6),
-                    _buildDialogRow("Branch", _selectedBranch?.name ?? "—"),
-                    const SizedBox(height: 6),
-                    _buildDialogRow(
-                      "When",
-                      _selectedDate != null
-                          ? "${DateFormat('MMM d').format(_selectedDate!)} · ${_selectedTime ?? ''}"
-                          : "—",
-                    ),
-                    const SizedBox(height: 6),
-                    _buildDialogRow("Amount", "₱${_totalPrice.toInt()}"),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                "We'll notify you using your contact details once the shop approves or proposes a new schedule.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFFD4A853),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _resetForm();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD4A853),
-                    foregroundColor: const Color(0xFF0F0F0F),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
+          scrollable: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          contentPadding: const EdgeInsets.all(20),
+          content: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 340),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD4A853),
+                    shape: BoxShape.circle,
                   ),
-                  child: const Text(
-                    "Got it",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  child: const Icon(
+                    Icons.hourglass_top_rounded,
+                    color: Color(0xFF0F0F0F),
+                    size: 26,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 14),
+                const Text(
+                  "Request Submitted",
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Hi ${_nameController.text.trim().isEmpty ? 'there' : _nameController.text.trim()}! Your request is waiting for shop approval.",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF999999),
+                    fontSize: 13,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0F0F0F),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFF2A2A2A)),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildDialogRow("Reference", bookingReference),
+                      const SizedBox(height: 6),
+                      _buildDialogRow("Status", "Pending approval"),
+                      const Divider(color: Color(0xFF2A2A2A), height: 18),
+                      _buildDialogRow("Service", _serviceNameDisplay),
+                      const SizedBox(height: 6),
+                      _buildDialogRow("Branch", _selectedBranch?.name ?? "—"),
+                      const SizedBox(height: 6),
+                      _buildDialogRow(
+                        "When",
+                        _selectedDate != null
+                            ? "${DateFormat('MMM d').format(_selectedDate!)} · ${_selectedTime ?? ''}"
+                            : "—",
+                      ),
+                      const SizedBox(height: 6),
+                      _buildDialogRow("Amount", "₱${_totalPrice.toInt()}"),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "We'll contact you when the shop approves or suggests a new schedule.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFFD4A853),
+                    fontSize: 11,
+                    height: 1.35,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _resetForm();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD4A853),
+                      foregroundColor: const Color(0xFF0F0F0F),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      "Got it",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
