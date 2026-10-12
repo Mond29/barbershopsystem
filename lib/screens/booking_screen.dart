@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/service.dart';
 import '../data/sample_data.dart';
+import '../models/booking.dart';
+import '../services/database_service.dart';
 
 class BookingScreen extends StatefulWidget {
   final BarberService? preselectedService;
@@ -1423,11 +1425,65 @@ class BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  void _submitBooking() {
+  Future<void> _submitBooking() async {
     final submittedAt = DateTime.now();
     final bookingReference =
         "GB-${DateFormat('MMdd').format(submittedAt)}-${submittedAt.millisecondsSinceEpoch.toString().substring(7)}";
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const AlertDialog(
+          backgroundColor: Color(0xFF1A1A1A),
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                color: Color(0xFFD4A853),
+                strokeWidth: 3,
+              ),
+              SizedBox(width: 16),
+              Text(
+                "Saving your booking...",
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    final booking = Booking(
+      customerName: _nameController.text.trim(),
+      phone: _phoneController.text.trim(),
+      email: _emailController.text.trim(),
+      serviceName: _selectedService?.name ?? 'Unknown Service',
+      subServiceName: _selectedSubService?.name,
+      branchName: _selectedBranch?.name ?? 'Not selected',
+      bookingDate: _selectedDate ?? DateTime.now(),
+      bookingTime: _selectedTime ?? 'Not selected',
+      barberName: _selectedBarberIndex != null
+          ? _barbers[_selectedBarberIndex!]
+          : null,
+      totalPrice: _totalPrice,
+      specialRequests: _requestsController.text.trim(),
+      status: 'pending',
+    );
+
+    final saved = await DatabaseService.insertBooking(booking);
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
+
+    if (saved) {
+      _showBookingReceipt(bookingReference);
+    } else {
+      _showBookingError();
+    }
+  }
+
+  void _showBookingReceipt(String bookingReference) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -1553,6 +1609,82 @@ class BookingScreenState extends State<BookingScreen> {
                 ),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showBookingError() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1A1A1A),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE74C3C).withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.error_outline,
+                  color: Color(0xFFE74C3C),
+                  size: 36,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Booking Not Saved",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                "We couldn't connect to the database. Please check your internet connection and MongoDB Atlas network access settings, then try again.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF999999),
+                  fontSize: 14,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFE74C3C),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    "OK",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
