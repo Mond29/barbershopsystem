@@ -23,24 +23,6 @@ class SampleData {
         SubService(id: 'hc4', name: 'Hair Art', price: 1140, durationMinutes: 90),
       ],
     ),
-    BarberService(
-      id: 'kids-haircut',
-      name: 'Kids Haircut',
-      description: 'Gentle, patient haircuts for children 12 & under. Fun environment, zero tears.',
-      price: 380,
-      durationMinutes: 30,
-      icon: Icons.child_care,
-      category: 'Haircut',
-    ),
-    BarberService(
-      id: 'senior-haircut',
-      name: 'Senior Haircut (60+)',
-      description: 'Special care service for our seniors. Gentle & precise grooming.',
-      price: 380,
-      durationMinutes: 45,
-      icon: Icons.elderly,
-      category: 'Haircut',
-    ),
 
     // =============== HAIR STYLING ===============
     BarberService(
