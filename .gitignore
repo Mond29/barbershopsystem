@@ -47,9 +47,6 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
-# Security: MongoDB config with credentials
-lib/config/mongo_config.dart
-
 # Duplicate / backup project folder
 barbershopsystem/
 
