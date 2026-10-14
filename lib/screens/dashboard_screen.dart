@@ -803,6 +803,7 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(child: _buildStatItem("35+", "Years of Service")),
                   const SizedBox(width: 8),

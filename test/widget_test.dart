@@ -29,6 +29,31 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('dashboard about statistics share the same top alignment', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const BarbershopApp());
+    await tester.scrollUntilVisible(
+      find.text('35+'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    final yearsTop = tester.getTopLeft(find.text('35+')).dy;
+    final branchesTop = tester.getTopLeft(find.text('40+')).dy;
+    final clientsTop = tester.getTopLeft(find.text('500K+')).dy;
+
+    expect(branchesTop, yearsTop);
+    expect(clientsTop, yearsTop);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('contacts fit a 320px-wide screen', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(320, 812);
     tester.view.devicePixelRatio = 1;
