@@ -1,0 +1,12 @@
+{
+  "name": "gentleman-barbershop",
+  "version": "1.0.0",
+  "description": "Gentleman Barbershop - Flutter frontend + Node.js backend",
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm --prefix backend run dev\" \"flutter run -d chrome\"",
+    "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm --prefix backend start\" \"flutter run -d chrome\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
