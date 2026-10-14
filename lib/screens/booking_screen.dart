@@ -674,7 +674,16 @@ class BookingScreenState extends State<BookingScreen> {
             );
           },
         );
-        if (picked != null) setState(() => _selectedDate = picked);
+        if (picked != null) {
+          setState(() {
+            _selectedDate = picked;
+            // If the picked date is today, clear a time slot that has
+            // already passed so the user must pick a valid future slot.
+            if (_selectedTime != null && _isSlotInPast(_selectedTime!)) {
+              _selectedTime = null;
+            }
+          });
+        }
       },
       borderRadius: BorderRadius.circular(14),
       child: Container(
@@ -741,6 +750,27 @@ class BookingScreenState extends State<BookingScreen> {
     );
   }
 
+  /// Returns true when the selected date is today AND the given time slot
+  /// (e.g. "9:00 AM") has already passed the current local time.
+  bool _isSlotInPast(String slot) {
+    if (_selectedDate == null) return false;
+    final now = DateTime.now();
+    final selected = _selectedDate!;
+    final isToday = selected.year == now.year &&
+        selected.month == now.month &&
+        selected.day == now.day;
+    if (!isToday) return false;
+
+    try {
+      final slotTime = DateFormat('h:mm a').parse(slot);
+      final nowMinutes = now.hour * 60 + now.minute;
+      final slotMinutes = slotTime.hour * 60 + slotTime.minute;
+      return slotMinutes <= nowMinutes;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Widget _buildTimeSelector() {
     final slots = SampleData.availableTimeSlots;
     return Wrap(
@@ -749,30 +779,41 @@ class BookingScreenState extends State<BookingScreen> {
       children: List.generate(slots.length, (index) {
         final slot = slots[index];
         final isSelected = _selectedTime == slot;
+        final isPast = _isSlotInPast(slot);
         return InkWell(
-          onTap: () => setState(() => _selectedTime = slot),
+          onTap: isPast ? null : () => setState(() => _selectedTime = slot),
           borderRadius: BorderRadius.circular(10),
           child: Container(
             width: 86,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color(0xFFD4A853)
-                  : const Color(0xFF1A1A1A),
+              color: isPast
+                  ? const Color(0xFF121212)
+                  : isSelected
+                      ? const Color(0xFFD4A853)
+                      : const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isSelected
-                    ? const Color(0xFFD4A853)
-                    : const Color(0xFF2A2A2A),
+                color: isPast
+                    ? const Color(0xFF222222)
+                    : isSelected
+                        ? const Color(0xFFD4A853)
+                        : const Color(0xFF2A2A2A),
               ),
             ),
             child: Center(
               child: Text(
                 slot,
                 style: TextStyle(
-                  color: isSelected ? const Color(0xFF0F0F0F) : Colors.white,
+                  color: isPast
+                      ? const Color(0xFF444444)
+                      : isSelected
+                          ? const Color(0xFF0F0F0F)
+                          : Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
+                  decoration:
+                      isPast ? TextDecoration.lineThrough : TextDecoration.none,
                 ),
               ),
             ),
@@ -1474,7 +1515,7 @@ class BookingScreenState extends State<BookingScreen> {
     final saved = await DatabaseService.insertBooking(booking);
 
     if (!mounted) return;
-    Navigator.of(context).pop();
+    Navigator.of(context, rootNavigator: true).pop();
 
     if (saved) {
       _showBookingReceipt(bookingReference);
@@ -1714,6 +1755,7 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   void _resetForm() {
+    if (!mounted) return;
     setState(() {
       _currentStep = 0;
       _selectedService = widget.preselectedService;

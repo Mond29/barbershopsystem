@@ -100,6 +100,7 @@ class Hairstyle {
   final String description;
   final IconData icon;
   final List<String> recommendedProductIds;
+  final String? imagePath;
 
   const Hairstyle({
     required this.id,
@@ -108,5 +109,6 @@ class Hairstyle {
     required this.description,
     required this.icon,
     this.recommendedProductIds = const [],
+    this.imagePath,
   });
 }

@@ -8,6 +8,7 @@ import 'screens/contacts_screen.dart';
 import 'screens/products_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/hairstyle_guide_screen.dart';
+import 'screens/appointments_screen.dart';
 import 'models/service.dart';
 import 'data/sample_data.dart';
 
@@ -158,6 +159,10 @@ class _MainScreenState extends State<MainScreen> {
     _pushScreen(0, HairstyleGuideScreen(onBookHairstyle: _onBookHairstyle));
   }
 
+  void _openAppointmentsFromDashboard() {
+    _pushScreen(0, const AppointmentsScreen());
+  }
+
   void _openHairstyleFromServices() {
     _pushScreen(1, HairstyleGuideScreen(onBookHairstyle: _onBookHairstyle));
   }
@@ -179,6 +184,7 @@ class _MainScreenState extends State<MainScreen> {
               onOpenProducts: _openProductsFromDashboard,
               onOpenAbout: _openAboutFromDashboard,
               onOpenHairstyle: _openHairstyleFromDashboard,
+              onOpenAppointments: _openAppointmentsFromDashboard,
             ),
           ),
           _buildOffstageNavigator(

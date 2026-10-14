@@ -1,7 +1,5 @@
-import 'package:mongo_dart/mongo_dart.dart' show ObjectId;
-
 class Booking {
-  final ObjectId? id;
+  final String? id;
   final String customerName;
   final String phone;
   final String email;
@@ -29,7 +27,7 @@ class Booking {
     this.barberName,
     required this.totalPrice,
     this.specialRequests,
-    this.status = 'confirmed',
+    this.status = 'pending',
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -54,20 +52,24 @@ class Booking {
 
   factory Booking.fromMap(Map<String, dynamic> map) {
     return Booking(
-      id: map['_id'] as ObjectId?,
-      customerName: map['customerName'] as String,
-      phone: map['phone'] as String,
-      email: map['email'] as String,
-      serviceName: map['serviceName'] as String,
+      id: map['_id']?.toString(),
+      customerName: map['customerName'] as String? ?? '',
+      phone: map['phone'] as String? ?? '',
+      email: map['email'] as String? ?? '',
+      serviceName: map['serviceName'] as String? ?? '',
       subServiceName: map['subServiceName'] as String?,
-      branchName: map['branchName'] as String,
-      bookingDate: DateTime.parse(map['bookingDate'] as String),
-      bookingTime: map['bookingTime'] as String,
+      branchName: map['branchName'] as String? ?? '',
+      bookingDate: DateTime.parse(
+        map['bookingDate'] as String? ?? DateTime.now().toIso8601String(),
+      ),
+      bookingTime: map['bookingTime'] as String? ?? '',
       barberName: map['barberName'] as String?,
-      totalPrice: (map['totalPrice'] as num).toDouble(),
+      totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
       specialRequests: map['specialRequests'] as String?,
-      status: map['status'] as String? ?? 'confirmed',
-      createdAt: DateTime.parse(map['createdAt'] as String),
+      status: map['status'] as String? ?? 'pending',
+      createdAt: DateTime.parse(
+        map['createdAt'] as String? ?? DateTime.now().toIso8601String(),
+      ),
     );
   }
 }

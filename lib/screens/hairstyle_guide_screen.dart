@@ -151,11 +151,11 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
       itemBuilder: (context, i) {
         final s = _styles[i];
         final g = gradients[i % gradients.length];
+        final hasImage = s.imagePath != null;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           margin: EdgeInsets.fromLTRB(4, 24, 4, _currentPage == i ? 8 : 18),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: g),
             borderRadius: BorderRadius.circular(24),
             boxShadow: _currentPage == i
                 ? [
@@ -167,56 +167,110 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                   ]
                 : null,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(22),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
+                if (hasImage)
+                  Image.asset(
+                    s.imagePath!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(s.icon, color: Colors.white, size: 28),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F0F0F).withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        "#${i + 1}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                        ),
+                        gradient: LinearGradient(colors: g),
                       ),
                     ),
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  s.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
+                  )
+                else
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: g),
+                    ),
+                  ),
+                // Dark overlay for text readability
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.15),
+                        Colors.black.withValues(alpha: 0.0),
+                        Colors.black.withValues(alpha: 0.55),
+                        Colors.black.withValues(alpha: 0.85),
+                      ],
+                      stops: const [0.0, 0.35, 0.7, 1.0],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  s.tagline,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
-                    fontSize: 13,
+                Padding(
+                  padding: const EdgeInsets.all(22),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(s.icon, color: Colors.white, size: 28),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0F0F0F).withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              "#${i + 1}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Text(
+                        s.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black54,
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        s.tagline,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 13,
+                          shadows: const [
+                            Shadow(
+                              color: Colors.black54,
+                              blurRadius: 6,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -256,16 +310,36 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradients[_styles.indexOf(s) % 2],
-                      ),
-                      borderRadius: BorderRadius.circular(14),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: SizedBox(
+                      width: 56,
+                      height: 56,
+                      child: s.imagePath != null
+                          ? Image.asset(
+                              s.imagePath!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors:
+                                        gradients[_styles.indexOf(s) % 2],
+                                  ),
+                                ),
+                                child: Icon(s.icon,
+                                    color: Colors.white, size: 26),
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: gradients[_styles.indexOf(s) % 2],
+                                ),
+                              ),
+                              child:
+                                  Icon(s.icon, color: Colors.white, size: 26),
+                            ),
                     ),
-                    child: Icon(s.icon, color: Colors.white, size: 26),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -306,6 +380,21 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                   height: 1,
                   color: const Color(0xFF2A2A2A),
                 ),
+                if (s.imagePath != null) ...[
+                  const SizedBox(height: 16),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 180,
+                      child: Image.asset(
+                        s.imagePath!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 16),
                 Text(
                   s.description,

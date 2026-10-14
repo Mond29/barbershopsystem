@@ -85,14 +85,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
               sliver: _buildProductsGrid(),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-                child: _buildGiftCardsBanner(),
-              ),
             ),
           ],
         ),
@@ -510,99 +504,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildGiftCardsBanner() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFD4A853), Color(0xFF9F7A26)],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: const Color(0xFF0F0F0F).withValues(alpha: 0.18),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.card_giftcard, color: Color(0xFF0F0F0F), size: 18),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            "Gentleman Gift Cards",
-            style: TextStyle(
-              color: Color(0xFF0F0F0F),
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            "Show appreciation with the perfect gift. Recipients enjoy any grooming service or product across all branches.",
-            style: TextStyle(
-              color: Color(0xB30F0F0F),
-              fontSize: 13,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 18),
-          const Text(
-            "CORPORATE SALES",
-            style: TextStyle(
-              color: Color(0xFF0F0F0F),
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            "Bulk orders? Email info@gentlemanbarbers.com",
-            style: TextStyle(
-              color: Color(0xCC0F0F0F),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-          const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                final uri = Uri(
-                  scheme: 'mailto',
-                  path: 'info@gentlemanbarbers.com',
-                  queryParameters: {'subject': 'Gift Card / Corporate Sales Inquiry'},
-                );
-                try { await launchUrl(uri); } catch (_) {}
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0F0F0F),
-                foregroundColor: const Color(0xFFD4A853),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                "Inquire via Email",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

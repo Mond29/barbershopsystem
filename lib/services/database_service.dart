@@ -1,60 +1,68 @@
-import 'package:mongo_dart/mongo_dart.dart';
-import '../config/mongo_config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/booking.dart';
 
 class DatabaseService {
-  static Db? _db;
+  static const String baseUrl = 'http://localhost:3000/api';
+  static const Duration _timeout = Duration(seconds: 15);
 
-  static Future<Db> get database async {
-    if (_db != null && _db!.isConnected) {
-      return _db!;
-    }
-    _db = await Db.create(MongoConfig.connectionString);
-    await _db!.open();
-    return _db!;
-  }
-
-  static Future<void> close() async {
-    await _db?.close();
-    _db = null;
-  }
-
+  // Create a new booking
   static Future<bool> insertBooking(Booking booking) async {
     try {
-      final db = await database;
-      final collection = db.collection('bookings');
-      final result = await collection.insertOne(booking.toMap());
-      return result.isSuccess;
+      final response = await http
+          .post(
+            Uri.parse('$baseUrl/bookings'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(booking.toMap()),
+          )
+          .timeout(_timeout);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+      print('Booking failed: ${response.statusCode} ${response.body}');
+      return false;
     } catch (e) {
-      print('MongoDB insert error: $e');
+      print('HTTP insert error: $e');
       return false;
     }
   }
 
+  // Get all bookings
   static Future<List<Booking>> getAllBookings() async {
     try {
-      final db = await database;
-      final collection = db.collection('bookings');
-      final docs = await collection.find(
-        where.sortBy('createdAt', descending: true),
-      ).toList();
-      return docs.map((d) => Booking.fromMap(d)).toList();
+      final response = await http
+          .get(Uri.parse('$baseUrl/bookings'))
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> bookingsList = data['bookings'] ?? [];
+        return bookingsList.map((b) => Booking.fromMap(b)).toList();
+      }
+      return [];
     } catch (e) {
-      print('MongoDB fetch error: $e');
+      print('HTTP fetch error: $e');
       return [];
     }
   }
 
+  // Get bookings by phone number
   static Future<List<Booking>> getBookingsByPhone(String phone) async {
     try {
-      final db = await database;
-      final collection = db.collection('bookings');
-      final docs = await collection.find(
-        where.eq('phone', phone).sortBy('createdAt', descending: true),
-      ).toList();
-      return docs.map((d) => Booking.fromMap(d)).toList();
+      final response = await http
+          .get(Uri.parse('$baseUrl/bookings/phone/$phone'))
+          .timeout(_timeout);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> bookingsList = data['bookings'] ?? [];
+        return bookingsList.map((b) => Booking.fromMap(b)).toList();
+      }
+      return [];
     } catch (e) {
-      print('MongoDB fetch error: $e');
+      print('HTTP fetch by phone error: $e');
       return [];
     }
   }

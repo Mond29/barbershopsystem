@@ -9,6 +9,7 @@ class DashboardScreen extends StatelessWidget {
   final VoidCallback onOpenProducts;
   final VoidCallback onOpenAbout;
   final VoidCallback onOpenHairstyle;
+  final VoidCallback onOpenAppointments;
 
   const DashboardScreen({
     super.key,
@@ -16,11 +17,11 @@ class DashboardScreen extends StatelessWidget {
     required this.onOpenProducts,
     required this.onOpenAbout,
     required this.onOpenHairstyle,
+    required this.onOpenAppointments,
   });
 
   @override
   Widget build(BuildContext context) {
-    final featuredProducts = ProductsData.all.take(5).toList();
     final featuredStyles = HairstylesData.all.take(3).toList();
     final branches = SampleData.branches
         .where((b) => b.region == 'Metro Manila')
@@ -40,16 +41,12 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 32),
               _buildFeaturedServices(context),
               const SizedBox(height: 32),
-              _buildFeaturedProducts(featuredProducts),
-              const SizedBox(height: 32),
               _buildHairstylePreview(featuredStyles),
               const SizedBox(height: 32),
               _buildAboutPreview(),
               const SizedBox(height: 32),
               _buildBranchPreview(context, branches),
               const SizedBox(height: 32),
-              _buildGiftCardsBanner(),
-              const SizedBox(height: 28),
               _buildCTASection(),
               const SizedBox(height: 40),
             ],
@@ -250,9 +247,9 @@ class DashboardScreen extends StatelessWidget {
                 onTap: () => onNavigate(1),
               ),
               _buildQuickActionCard(
-                icon: Icons.shopping_bag_outlined,
-                label: "Shop\nProducts",
-                onTap: onOpenProducts,
+                icon: Icons.event_available,
+                label: "My\nAppointments",
+                onTap: onOpenAppointments,
                 highlight: true,
               ),
               _buildQuickActionCard(
@@ -271,14 +268,14 @@ class DashboardScreen extends StatelessWidget {
                 onTap: onOpenHairstyle,
               ),
               _buildQuickActionCard(
+                icon: Icons.shopping_bag_outlined,
+                label: "Shop\nProducts",
+                onTap: onOpenProducts,
+              ),
+              _buildQuickActionCard(
                 icon: Icons.info_outline,
                 label: "Who We\nAre",
                 onTap: onOpenAbout,
-              ),
-              _buildQuickActionCard(
-                icon: Icons.card_giftcard,
-                label: "Gift\nCards",
-                onTap: onOpenProducts,
               ),
               _buildQuickActionCard(
                 icon: Icons.phone,
@@ -549,128 +546,6 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeaturedProducts(List<Product> featured) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Expanded(
-                child: Text(
-                  "Featured Products",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: TextButton(
-                  onPressed: onOpenProducts,
-                  child: const FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "Shop All",
-                      style: TextStyle(
-                        color: Color(0xFFD4A853),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            "Gentleman in your hands.",
-            style: TextStyle(color: Color(0xFF999999), fontSize: 14),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 180,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: featured.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 14),
-              itemBuilder: (ctx, i) => _buildMiniProductCard(featured[i]),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniProductCard(Product p) {
-    final gradients = const [
-      [Color(0xFFD4A853), Color(0xFF7A5A18)],
-      [Color(0xFF4E4E4E), Color(0xFF1A1A1A)],
-      [Color(0xFFB8892E), Color(0xFF7A5A18)],
-    ];
-    final g = gradients[p.id.hashCode % gradients.length];
-
-    return InkWell(
-      onTap: onOpenProducts,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        width: 140,
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1A1A),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFF2A2A2A)),
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 86,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: g),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(child: Icon(p.icon, color: Colors.white, size: 32)),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              p.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              p.category,
-              style: const TextStyle(color: Color(0xFF777777), fontSize: 10),
-            ),
-            const Spacer(),
-            Text(
-              "₱${p.price.toInt()}",
-              style: const TextStyle(
-                color: Color(0xFFD4A853),
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildHairstylePreview(List<Hairstyle> styles) {
     final gradients = const [
       [Color(0xFFD4A853), Color(0xFF7A5A18)],
@@ -735,45 +610,101 @@ class DashboardScreen extends StatelessWidget {
             itemBuilder: (ctx, i) {
               final s = styles[i];
               final g = gradients[i % gradients.length];
+              final hasImage = s.imagePath != null;
               return InkWell(
                 onTap: onOpenHairstyle,
                 borderRadius: BorderRadius.circular(14),
                 child: Container(
-                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: g),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(s.icon, color: Colors.white, size: 26),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            s.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        if (hasImage)
+                          Image.asset(
+                            s.imagePath!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: g),
+                              ),
+                            ),
+                          )
+                        else
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: g),
                             ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            s.tagline,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.82),
-                              fontSize: 9,
-                              height: 1.2,
+                        // Dark gradient overlay for text readability
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withValues(alpha: 0.25),
+                                Colors.black.withValues(alpha: 0.1),
+                                Colors.black.withValues(alpha: 0.75),
+                              ],
+                              stops: const [0.0, 0.4, 1.0],
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(s.icon, color: Colors.white, size: 26),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    s.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          blurRadius: 6,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    s.tagline,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.88),
+                                      fontSize: 9,
+                                      height: 1.2,
+                                      shadows: const [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          blurRadius: 4,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -1049,77 +980,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildGiftCardsBanner() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: InkWell(
-        onTap: onOpenProducts,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(22),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF2B1F0A), Color(0xFF1A1408)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: const Color(0xFFD4A853).withValues(alpha: 0.4),
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFD4A853), Color(0xFFB8892E)],
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(
-                  Icons.card_giftcard,
-                  color: Color(0xFF0F0F0F),
-                ),
-              ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gift Cards & Corporate",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "The perfect gift. Recipients enjoy any service or product across all branches.",
-                      style: TextStyle(
-                        color: Color(0xFFAAAAAA),
-                        fontSize: 12,
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Color(0xFFD4A853),
-                size: 14,
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
