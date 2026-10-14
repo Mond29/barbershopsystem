@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../models/service.dart';
 import '../data/sample_data.dart';
 import '../models/booking.dart';
 import '../services/database_service.dart';
+import '../utils/input_validators.dart';
 
 class BookingScreen extends StatefulWidget {
   final BarberService? preselectedService;
@@ -924,6 +926,8 @@ class BookingScreenState extends State<BookingScreen> {
           child: TextField(
             controller: _requestsController,
             maxLines: 7,
+            maxLength: 500,
+            inputFormatters: [LengthLimitingTextInputFormatter(500)],
             style: const TextStyle(color: Colors.white, fontSize: 14),
             decoration: const InputDecoration(
               hintText:
@@ -1116,13 +1120,14 @@ class BookingScreenState extends State<BookingScreen> {
           label: "Full Name *",
           hint: "Juan Dela Cruz",
           icon: Icons.person,
-          validator: (v) {
-            if (v == null || v.trim().isEmpty) {
-              return "Please enter your full name";
-            }
-            if (v.trim().length < 3) return "At least 3 characters";
-            return null;
-          },
+          textCapitalization: TextCapitalization.words,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+              RegExp(r"[A-Za-z\u00C0-\u024F\u1E00-\u1EFF\u00D1\u00F1 .'’-]"),
+            ),
+            LengthLimitingTextInputFormatter(80),
+          ],
+          validator: InputValidators.fullName,
         ),
         const SizedBox(height: 16),
         _buildTextField(
@@ -1131,14 +1136,11 @@ class BookingScreenState extends State<BookingScreen> {
           hint: "0917 123 4567",
           icon: Icons.phone,
           keyboardType: TextInputType.phone,
-          validator: (v) {
-            if (v == null || v.trim().isEmpty) {
-              return "Please enter your phone";
-            }
-            final c = v.replaceAll(RegExp(r'[^\d]'), '');
-            if (c.length < 10) return "Enter a valid phone number";
-            return null;
-          },
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9+ ()-]')),
+            LengthLimitingTextInputFormatter(18),
+          ],
+          validator: InputValidators.phone,
         ),
         const SizedBox(height: 16),
         _buildTextField(
@@ -1147,12 +1149,11 @@ class BookingScreenState extends State<BookingScreen> {
           hint: "juan@email.com",
           icon: Icons.email,
           keyboardType: TextInputType.emailAddress,
-          validator: (v) {
-            if (v == null || v.trim().isEmpty) return null;
-            final regex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-            if (!regex.hasMatch(v.trim())) return "Enter a valid email";
-            return null;
-          },
+          inputFormatters: [
+            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+            LengthLimitingTextInputFormatter(254),
+          ],
+          validator: InputValidators.email,
         ),
         const SizedBox(height: 16),
         _buildTextField(
@@ -1160,6 +1161,14 @@ class BookingScreenState extends State<BookingScreen> {
           label: "Referrer (if any)",
           hint: "Friend or barber name that referred you",
           icon: Icons.badge,
+          textCapitalization: TextCapitalization.words,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(
+              RegExp(r"[A-Za-z\u00C0-\u024F\u1E00-\u1EFF\u00D1\u00F1 .'’-]"),
+            ),
+            LengthLimitingTextInputFormatter(80),
+          ],
+          validator: InputValidators.optionalPersonName,
         ),
         const SizedBox(height: 16),
         Container(
@@ -1203,6 +1212,8 @@ class BookingScreenState extends State<BookingScreen> {
     required String hint,
     required IconData icon,
     TextInputType? keyboardType,
+    TextCapitalization textCapitalization = TextCapitalization.none,
+    List<TextInputFormatter>? inputFormatters,
     String? Function(String?)? validator,
     int maxLines = 1,
   }) {
@@ -1221,6 +1232,8 @@ class BookingScreenState extends State<BookingScreen> {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
+          textCapitalization: textCapitalization,
+          inputFormatters: inputFormatters,
           maxLines: maxLines,
           validator: validator,
           style: const TextStyle(color: Colors.white, fontSize: 14),

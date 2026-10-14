@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/service.dart';
 import '../data/sample_data.dart';
 import '../data/products_data.dart';
@@ -184,6 +185,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         ),
         child: TextField(
           controller: _searchController,
+          inputFormatters: [LengthLimitingTextInputFormatter(100)],
           onChanged: (v) => setState(() => _searchQuery = v),
           style: const TextStyle(color: Colors.white, fontSize: 15),
           decoration: InputDecoration(

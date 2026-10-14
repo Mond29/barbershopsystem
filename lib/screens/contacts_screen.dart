@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/sample_data.dart';
 import '../models/service.dart';
@@ -470,6 +471,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       ),
       child: TextField(
         controller: _searchController,
+        inputFormatters: [LengthLimitingTextInputFormatter(100)],
         onChanged: (v) => setState(() => _searchCity = v),
         style: const TextStyle(color: Colors.white, fontSize: 15),
         decoration: InputDecoration(
