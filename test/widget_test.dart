@@ -102,6 +102,26 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('empty service search stays centered without overflow', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const BarbershopApp());
+    await tester.tap(find.text('Services').last);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'haircute');
+    await tester.pumpAndSettle();
+
+    expect(find.text('No services found'), findsOneWidget);
+    expect(find.text('Try a different search or category.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('booking fits a narrow phone and locks the MOA location', (
     WidgetTester tester,
   ) async {
