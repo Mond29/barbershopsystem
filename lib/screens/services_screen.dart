@@ -28,26 +28,50 @@ class _ServicesScreenState extends State<ServicesScreen> {
   List<String> get _categories => SampleData.serviceCategories;
 
   List<BarberService> get _filteredServices {
-    var list = SampleData.services;
+    var list = SampleData.services.toList();
     if (_selectedCategory != null && _selectedCategory != 'All') {
       list = list.where((s) => s.category == _selectedCategory).toList();
     }
-    if (_searchQuery.isNotEmpty) {
-      final q = _searchQuery.toLowerCase();
-      list = list.where((s) {
-        bool match =
-            s.name.toLowerCase().contains(q) ||
-            s.description.toLowerCase().contains(q) ||
-            s.category.toLowerCase().contains(q);
-        if (!match && s.subServices != null) {
-          match = s.subServices!.any(
-            (sub) => sub.name.toLowerCase().contains(q),
-          );
-        }
-        return match;
-      }).toList();
-    }
+    final q = _searchQuery.trim().toLowerCase();
+    if (q.isEmpty) return list;
+
+    final catalogOrder = <String, int>{
+      for (var index = 0; index < list.length; index++) list[index].id: index,
+    };
+    list = list.where((service) => _searchRank(service, q) != null).toList()
+      ..sort((a, b) {
+        final rankComparison = _searchRank(a, q)!.compareTo(_searchRank(b, q)!);
+        if (rankComparison != 0) return rankComparison;
+        return catalogOrder[a.id]!.compareTo(catalogOrder[b.id]!);
+      });
     return list;
+  }
+
+  int? _searchRank(BarberService service, String query) {
+    final name = service.name.toLowerCase();
+    final category = service.category.toLowerCase();
+    final description = service.description.toLowerCase();
+    final subServiceNames =
+        service.subServices
+            ?.map((subService) => subService.name.toLowerCase())
+            .toList() ??
+        const <String>[];
+
+    bool wordStartsWith(String value) => value
+        .split(RegExp(r'[^a-z0-9]+'))
+        .any((word) => word.startsWith(query));
+
+    if (name == query) return 0;
+    if (name.startsWith(query)) return 1;
+    if (wordStartsWith(name)) return 2;
+    if (category == query || category.startsWith(query)) return 3;
+    if (subServiceNames.any(wordStartsWith)) return 4;
+    if (name.contains(query) || category.contains(query)) return 5;
+    if (subServiceNames.any((subService) => subService.contains(query))) {
+      return 6;
+    }
+    if (description.contains(query)) return 7;
+    return null;
   }
 
   @override

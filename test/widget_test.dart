@@ -76,6 +76,32 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('service search ranks direct service names before variants', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const BarbershopApp());
+    await tester.tap(find.text('Services').last);
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'scalp');
+    await tester.pumpAndSettle();
+
+    final scalpCare = find.text('Scalp Care').last;
+    final massages = find.text('Massages').last;
+    expect(find.text('Scalp Care'), findsWidgets);
+    expect(find.text('Massages'), findsWidgets);
+    expect(
+      tester.getTopLeft(scalpCare).dy,
+      lessThan(tester.getTopLeft(massages).dy),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('booking fits a narrow phone and locks the MOA location', (
     WidgetTester tester,
   ) async {
