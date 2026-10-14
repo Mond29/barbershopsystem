@@ -90,7 +90,7 @@ class DashboardScreen extends StatelessWidget {
                         child: Image.asset(
                           'web/assets/Gentleman_Barbershop_Crest-removebg-preview.png',
                           fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const Icon(
+                          errorBuilder: (_, _, _) => const Icon(
                             Icons.cut,
                             color: Color(0xFFD4A853),
                             size: 28,
@@ -408,7 +408,7 @@ class DashboardScreen extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: services.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              separatorBuilder: (_, _) => const SizedBox(width: 16),
               itemBuilder: (context, index) {
                 return _buildServiceCard(services[index]);
               },
@@ -627,7 +627,7 @@ class DashboardScreen extends StatelessWidget {
                           Image.asset(
                             s.imagePath!,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                            errorBuilder: (_, _, _) => Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: g),
                               ),
@@ -685,8 +685,9 @@ class DashboardScreen extends StatelessWidget {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.88),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.88,
+                                      ),
                                       fontSize: 9,
                                       height: 1.2,
                                       shadows: const [
@@ -1030,6 +1031,7 @@ class DashboardScreen extends StatelessWidget {
                       mode: LaunchMode.externalApplication,
                     );
                   } catch (e) {
+                    if (!ctx.mounted) return;
                     ScaffoldMessenger.of(ctx).showSnackBar(
                       SnackBar(
                         content: Text("Could not dial: ${telUri.path}"),

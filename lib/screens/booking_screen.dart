@@ -25,6 +25,7 @@ class BookingScreen extends StatefulWidget {
 
 class BookingScreenState extends State<BookingScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _stepScrollController = ScrollController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
@@ -59,6 +60,7 @@ class BookingScreenState extends State<BookingScreen> {
 
   @override
   void dispose() {
+    _stepScrollController.dispose();
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
@@ -97,6 +99,7 @@ class BookingScreenState extends State<BookingScreen> {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     return SingleChildScrollView(
+                      controller: _stepScrollController,
                       padding: EdgeInsets.fromLTRB(
                         horizontalPadding,
                         8,
@@ -758,7 +761,8 @@ class BookingScreenState extends State<BookingScreen> {
     if (_selectedDate == null) return false;
     final now = DateTime.now();
     final selected = _selectedDate!;
-    final isToday = selected.year == now.year &&
+    final isToday =
+        selected.year == now.year &&
         selected.month == now.month &&
         selected.day == now.day;
     if (!isToday) return false;
@@ -792,15 +796,15 @@ class BookingScreenState extends State<BookingScreen> {
               color: isPast
                   ? const Color(0xFF121212)
                   : isSelected
-                      ? const Color(0xFFD4A853)
-                      : const Color(0xFF1A1A1A),
+                  ? const Color(0xFFD4A853)
+                  : const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isPast
                     ? const Color(0xFF222222)
                     : isSelected
-                        ? const Color(0xFFD4A853)
-                        : const Color(0xFF2A2A2A),
+                    ? const Color(0xFFD4A853)
+                    : const Color(0xFF2A2A2A),
               ),
             ),
             child: Center(
@@ -810,12 +814,13 @@ class BookingScreenState extends State<BookingScreen> {
                   color: isPast
                       ? const Color(0xFF444444)
                       : isSelected
-                          ? const Color(0xFF0F0F0F)
-                          : Colors.white,
+                      ? const Color(0xFF0F0F0F)
+                      : Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  decoration:
-                      isPast ? TextDecoration.lineThrough : TextDecoration.none,
+                  decoration: isPast
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
                 ),
               ),
             ),
@@ -1370,6 +1375,15 @@ class BookingScreenState extends State<BookingScreen> {
   }
 
   // ====== BOTTOM NAV / STEP BUTTONS ======
+  void _goToStep(int step) {
+    setState(() => _currentStep = step);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_stepScrollController.hasClients) {
+        _stepScrollController.jumpTo(0);
+      }
+    });
+  }
+
   Widget _buildBottomButtons(double horizontalPadding) {
     bool canProceed = true;
     String? errorMsg;
@@ -1408,8 +1422,9 @@ class BookingScreenState extends State<BookingScreen> {
           children: [
             if (_currentStep > 0)
               Expanded(
+                flex: 2,
                 child: OutlinedButton(
-                  onPressed: () => setState(() => _currentStep--),
+                  onPressed: () => _goToStep(_currentStep - 1),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Color(0xFF333333)),
@@ -1426,7 +1441,7 @@ class BookingScreenState extends State<BookingScreen> {
               ),
             if (_currentStep > 0) const SizedBox(width: 12),
             Expanded(
-              flex: 2,
+              flex: _currentStep == 3 ? 5 : 4,
               child: ElevatedButton(
                 onPressed: canProceed
                     ? () {
@@ -1435,7 +1450,7 @@ class BookingScreenState extends State<BookingScreen> {
                             _submitBooking();
                           }
                         } else {
-                          setState(() => _currentStep++);
+                          _goToStep(_currentStep + 1);
                         }
                       }
                     : () {
@@ -1462,13 +1477,22 @@ class BookingScreenState extends State<BookingScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: Text(
-                  _currentStep == 3
-                      ? "Submit Booking Request"
-                      : "Next Step ${_currentStep + 2}/4",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _currentStep == 3
+                          ? "Submit Booking Request"
+                          : "Next Step ${_currentStep + 2}/4",
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: MediaQuery.sizeOf(context).width < 390
+                            ? 13
+                            : 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -1731,10 +1755,7 @@ class BookingScreenState extends State<BookingScreen> {
                   ),
                   child: const Text(
                     "OK",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

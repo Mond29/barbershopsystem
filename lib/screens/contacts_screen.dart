@@ -182,15 +182,19 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text(
-                      "$_selectedRegion Branches",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        "$_selectedRegion Branches",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 10),
                     Text(
                       "${_filteredBranches.length} location${_filteredBranches.length != 1 ? 's' : ''}",
                       style: const TextStyle(
@@ -618,7 +622,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
       slivers.add(
         SliverList.separated(
           itemCount: branches.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          separatorBuilder: (_, _) => const SizedBox(height: 16),
           itemBuilder: (context, index) {
             return _buildBranchCard(branches[index]);
           },
@@ -777,72 +781,87 @@ class _ContactsScreenState extends State<ContactsScreen> {
               ),
             ],
             const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _openMaps(branch),
-                    icon: const Icon(Icons.map, size: 16),
-                    label: const Text("Directions"),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Color(0xFF333333)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  flex: 2,
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      if (branch.mobileNumbers.isNotEmpty) {
-                        _callBranch(branch.mobileNumbers.first);
-                      } else if (branch.landline.isNotEmpty) {
-                        _callBranch(branch.landline);
-                      }
-                    },
-                    icon: const Icon(Icons.call, size: 16),
-                    label: const Text("Call"),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFD4A853),
-                      side: const BorderSide(color: Color(0xFFD4A853)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      widget.onBookBranch(2, selectedBranch: branch);
-                    },
-                    icon: const Icon(Icons.calendar_month, size: 16),
-                    label: const Text("Book"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD4A853),
-                      foregroundColor: const Color(0xFF0F0F0F),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            _buildBranchActions(branch),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBranchActions(Branch branch) {
+    Widget buttonLabel(IconData icon, String label) {
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16),
+            const SizedBox(width: 6),
+            Text(label, maxLines: 1, style: const TextStyle(fontSize: 13)),
+          ],
+        ),
+      );
+    }
+
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
+    const padding = EdgeInsets.symmetric(horizontal: 8, vertical: 14);
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: OutlinedButton(
+            onPressed: () => _openMaps(branch),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: const BorderSide(color: Color(0xFF333333)),
+              padding: padding,
+              minimumSize: const Size(0, 48),
+              shape: shape,
+            ),
+            child: buttonLabel(Icons.map, "Directions"),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 2,
+          child: OutlinedButton(
+            onPressed: () {
+              if (branch.mobileNumbers.isNotEmpty) {
+                _callBranch(branch.mobileNumbers.first);
+              } else if (branch.landline.isNotEmpty) {
+                _callBranch(branch.landline);
+              }
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFFD4A853),
+              side: const BorderSide(color: Color(0xFFD4A853)),
+              padding: padding,
+              minimumSize: const Size(0, 48),
+              shape: shape,
+            ),
+            child: buttonLabel(Icons.call, "Call"),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          flex: 2,
+          child: ElevatedButton(
+            onPressed: () => widget.onBookBranch(2, selectedBranch: branch),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFD4A853),
+              foregroundColor: const Color(0xFF0F0F0F),
+              padding: padding,
+              minimumSize: const Size(0, 48),
+              shape: shape,
+              elevation: 0,
+            ),
+            child: buttonLabel(Icons.calendar_month, "Book"),
+          ),
+        ),
+      ],
     );
   }
 

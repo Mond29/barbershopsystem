@@ -41,6 +41,16 @@ void main() {
 
     expect(find.text('Gentleman Concierge'), findsOneWidget);
     expect(tester.takeException(), isNull);
+
+    await tester.scrollUntilVisible(
+      find.text('Directions'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Directions'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('services and category chips fit a 320px-wide screen', (
@@ -139,6 +149,38 @@ void main() {
 
     expect(tester.getSize(firstCard), tester.getSize(secondCard));
     expect(tester.getSize(firstCard), tester.getSize(lastCard));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('booking scroll resets when moving to the next step', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(375, 812);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BookingScreen(preselectedService: SampleData.services.first),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final stepScroll = find.byType(SingleChildScrollView).first;
+    await tester.drag(stepScroll, const Offset(0, -300));
+    await tester.pumpAndSettle();
+
+    final scrollable = tester.state<ScrollableState>(
+      find.descendant(of: stepScroll, matching: find.byType(Scrollable)),
+    );
+    expect(scrollable.position.pixels, greaterThan(0));
+
+    await tester.tap(find.text('Next Step 2/4'));
+    await tester.pumpAndSettle();
+
+    expect(scrollable.position.pixels, 0);
+    expect(find.text('Choose barber / stylist'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

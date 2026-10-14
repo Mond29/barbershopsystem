@@ -227,7 +227,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final cat = _categories[index];
           final isSelected = (_selectedCategory ?? 'All') == cat;
@@ -347,7 +347,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           Image.asset(
                             s.imagePath!,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                            errorBuilder: (_, _, _) => Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(colors: g),
                               ),
@@ -385,8 +385,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                                     width: 40,
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.35),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.35,
+                                      ),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Icon(s.icon, color: Colors.white),

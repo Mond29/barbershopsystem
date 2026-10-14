@@ -5,10 +5,7 @@ import '../models/service.dart';
 class HairstyleGuideScreen extends StatefulWidget {
   final void Function(BarberService? service) onBookHairstyle;
 
-  const HairstyleGuideScreen({
-    super.key,
-    required this.onBookHairstyle,
-  });
+  const HairstyleGuideScreen({super.key, required this.onBookHairstyle});
 
   @override
   State<HairstyleGuideScreen> createState() => _HairstyleGuideScreenState();
@@ -87,10 +84,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                     SizedBox(height: 6),
                     Text(
                       "Tap any style to see how we craft it, plus product recos to maintain it at home.",
-                      style: TextStyle(
-                        color: Color(0xFF999999),
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Color(0xFF999999), fontSize: 14),
                     ),
                   ],
                 ),
@@ -124,7 +118,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
               padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
               sliver: SliverList.separated(
                 itemCount: _styles.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 14),
+                separatorBuilder: (_, _) => const SizedBox(height: 14),
                 itemBuilder: (context, i) => _buildStyleCard(_styles[i]),
               ),
             ),
@@ -176,7 +170,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                   Image.asset(
                     s.imagePath!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+                    errorBuilder: (_, _, _) => Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(colors: g),
                       ),
@@ -223,9 +217,13 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0F0F0F).withValues(alpha: 0.5),
+                              color: const Color(
+                                0xFF0F0F0F,
+                              ).withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -293,9 +291,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isExpanded
-              ? const Color(0xFFD4A853)
-              : const Color(0xFF2A2A2A),
+          color: isExpanded ? const Color(0xFFD4A853) : const Color(0xFF2A2A2A),
         ),
       ),
       child: InkWell(
@@ -319,15 +315,17 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                           ? Image.asset(
                               s.imagePath!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
+                              errorBuilder: (_, _, _) => Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors:
-                                        gradients[_styles.indexOf(s) % 2],
+                                    colors: gradients[_styles.indexOf(s) % 2],
                                   ),
                                 ),
-                                child: Icon(s.icon,
-                                    color: Colors.white, size: 26),
+                                child: Icon(
+                                  s.icon,
+                                  color: Colors.white,
+                                  size: 26,
+                                ),
                               ),
                             )
                           : Container(
@@ -336,8 +334,11 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                                   colors: gradients[_styles.indexOf(s) % 2],
                                 ),
                               ),
-                              child:
-                                  Icon(s.icon, color: Colors.white, size: 26),
+                              child: Icon(
+                                s.icon,
+                                color: Colors.white,
+                                size: 26,
+                              ),
                             ),
                     ),
                   ),
@@ -367,7 +368,9 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                     ),
                   ),
                   Icon(
-                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: const Color(0xFF777777),
                     size: 26,
                   ),
@@ -390,7 +393,7 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                       child: Image.asset(
                         s.imagePath!,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
                       ),
                     ),
                   ),
@@ -422,18 +425,26 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                     ...products.map((p) {
                       return Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF0F0F0F),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                              color: const Color(0xFFD4A853).withValues(alpha: 0.4)),
+                            color: const Color(
+                              0xFFD4A853,
+                            ).withValues(alpha: 0.4),
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(p.icon,
-                                color: const Color(0xFFD4A853), size: 16),
+                            Icon(
+                              p.icon,
+                              color: const Color(0xFFD4A853),
+                              size: 16,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               p.name,
@@ -460,7 +471,9 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                       const Text(
                         "No specific product required.",
                         style: TextStyle(
-                            color: Color(0xFF777777), fontSize: 12),
+                          color: Color(0xFF777777),
+                          fontSize: 12,
+                        ),
                       ),
                   ],
                 ),
@@ -473,7 +486,8 @@ class _HairstyleGuideScreenState extends State<HairstyleGuideScreen> {
                       final BarberService placeholder = const BarberService(
                         id: 'haircut-main',
                         name: 'Haircut',
-                        description: 'Signature Gentleman haircut crafted to your chosen style.',
+                        description:
+                            'Signature Gentleman haircut crafted to your chosen style.',
                         price: 480,
                         durationMinutes: 45,
                         icon: Icons.content_cut,

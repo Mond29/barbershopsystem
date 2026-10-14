@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/booking.dart';
 
@@ -21,10 +22,10 @@ class DatabaseService {
         final data = jsonDecode(response.body);
         return data['success'] == true;
       }
-      print('Booking failed: ${response.statusCode} ${response.body}');
+      debugPrint('Booking failed: ${response.statusCode} ${response.body}');
       return false;
     } catch (e) {
-      print('HTTP insert error: $e');
+      debugPrint('HTTP insert error: $e');
       return false;
     }
   }
@@ -43,7 +44,7 @@ class DatabaseService {
       }
       return [];
     } catch (e) {
-      print('HTTP fetch error: $e');
+      debugPrint('HTTP fetch error: $e');
       return [];
     }
   }
@@ -62,7 +63,7 @@ class DatabaseService {
       }
       return [];
     } catch (e) {
-      print('HTTP fetch by phone error: $e');
+      debugPrint('HTTP fetch by phone error: $e');
       return [];
     }
   }
